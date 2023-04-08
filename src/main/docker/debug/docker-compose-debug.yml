@@ -1,0 +1,4 @@
+version: '3.4'
+services:
+  ledger:
+    image: openjdk:20-oraclelinux8
