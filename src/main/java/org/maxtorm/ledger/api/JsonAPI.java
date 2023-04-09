@@ -27,7 +27,7 @@ public abstract class JsonAPI {
                 throw new APIError(ErrorCode.NetworkError, "invalid response status code: {}", response.statusCode());
             }
 
-            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return objectMapper.readValue(response.body(), valueType);
         } catch (IOException | InterruptedException e) {
             getLogger().error("system error: {}", e.getMessage());

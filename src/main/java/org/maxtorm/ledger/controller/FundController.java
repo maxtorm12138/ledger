@@ -20,9 +20,11 @@ public class FundController {
     @Autowired
     private FundService fundService;
 
-    @RequestMapping("/addSubscribeList")
-    LedgerAPIResponse<Void> addSubscribeList(@RequestParam String code) {
+    @RequestMapping("/subscribe")
+    LedgerAPIResponse<Void> subscribe(@RequestParam String code) {
         BasicFundInfo fundInfo = fundService.getBasicFundInfo(code);
+
+
         return new LedgerAPIResponse<>(ErrorCode.Success);
     }
 }
