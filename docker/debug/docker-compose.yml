@@ -1,0 +1,21 @@
+version: '3.4'
+services:
+  ledger:
+    container_name: 'ledger'
+    image: amazoncorretto:20-alpine3.17
+    environment:
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+
+  mysql:
+    container_name: 'mysql'
+    image: mysql:8.0.32
+    network_mode: 'host'
+    restart: always
+    volumes:
+      - /home/maxtorm/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ledger
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_RANDOM_ROOT_PASSWORD: "YES"

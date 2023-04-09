@@ -1,6 +1,7 @@
 package org.maxtorm.ledger.service;
 
-import org.maxtorm.ledger.api.APIFail;
+
+import org.maxtorm.ledger.api.APIError;
 import org.maxtorm.ledger.api.FundAPI;
 import org.maxtorm.ledger.api.record.BasicFundInfo;
 import org.slf4j.Logger;
@@ -17,15 +18,8 @@ public class FundService {
     @Value("${org.maxtorm.ledger.api.fund.token}")
     private String token;
 
-    public BasicFundInfo update() {
+    public BasicFundInfo getBasicFundInfo(String code) {
         FundAPI api = new FundAPI(token);
-
-        try {
-            return api.getBasicInfo("012348");
-        }
-        catch (APIFail fail) {
-            logger.error("getBasicInfo fail");
-            return null;
-        }
+        return api.getBasicInfo(code);
     }
 }
