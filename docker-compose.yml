@@ -1,23 +1,11 @@
 version: '3.4'
 services:
-  mongodb:
-    container_name: 'mongodb'
-    image: mongo:6.0.5
-    network_mode: host
-    environment:
-      MONGO_INITDB_DATABASE: ledger
-
   ledger:
     container_name: 'ledger'
     build:
       context: ./
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     environment:
-      MYSQL_USER: "${MYSQL_USER}"
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
-      SPRING_DATASOURCE_USERNAME: "${MYSQL_USER}"
-      SPRING_DATASOURCE_PASSWORD: "${MYSQL_PASSWORD}"
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ledger?allowPublicKeyRetrieval=true&useSSL=false
     depends_on:
       - mongodb
 

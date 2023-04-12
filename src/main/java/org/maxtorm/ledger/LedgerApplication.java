@@ -2,6 +2,12 @@ package org.maxtorm.ledger;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import javax.sql.DataSource;
+
 
 @SpringBootApplication
 public class LedgerApplication {
@@ -10,4 +16,11 @@ public class LedgerApplication {
         SpringApplication.run(LedgerApplication.class, args);
     }
 
+    @Bean
+    public DataSource dataSource() {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.sqlite.JDBC");
+        dataSource.setUrl("jdbc:sqlite:/database/ledger.db");
+        return dataSource;
+    }
 }

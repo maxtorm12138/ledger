@@ -1,102 +1,56 @@
 @startuml
 'https://plantuml.com/object-diagrm
 
-enum AccountType {
-    DEBIT: 储蓄卡
-    CREDIT: 信用卡
-    FUNDS: 基金
-    STOCK: 股票
-    FINANCING: 理财
-    CASH: 现金
-    NETWORK: 网络账户
-    MONEY-FUND: 货币基金
-    BLACK-HOLE: 黑洞
-}
-
 object Account {
-    id: Number 账户ID primary key
+    autoId: Number 自动ID primary key
+
+    accountId: String 账户ID UNIQUE
+    rootAccountId: String 根账户ID
+    parentAccountId: String 父账户ID
+
+    depth: Number 深度
     name: String 帐号名称
-    accountLevel: Number 账户深度
-    subAccounts: Array<Number> 子账户
-    type: AccountType 账户类型
-    bookBalance: Number 账面余额
     createTime: Timestamp 记录创建时间
     updateTime: Timestamp 记录更新时间
 }
 
-object SubAccount {
-    id: Number 账户ID primary key
-    parentAccountId: Number 父账户ID foreign key
-    type: AccountType 账户类型
-    floatingSurplus: Number 浮盈
-    floatingSurplusRate: Number 浮盈率
-    bookBalance: Number 账面余额
-    cost: Number 成本
-    createTime: Timestamp 记录创建时间
-    code: String 对应的基金或者股票或者理财账户号
-    share: Number 总份额
-    marketPrice: Number 市值
+object Transaction {
+    autoId: Number 自动ID primary key
 
-    createTime: Timestamp 记录创建时间
-    updateTime: Timestamp 记录更新时间
+    transactionId: String 交易ID
+    sourceAccountId: Number 出资方帐号ID
+    destinationAccountId: Number 目的出资方帐号ID
+    amount: Number 资金额度
 }
 
-SubAccount o--- Account : 父子关系
-AccountType <|-- Account::type
-AccountType <|-- SubAccount::type
-Fund <--> SubAccount::code : 持有
-Stock <--> SubAccount::code : 持有
+'object AccountCashFlow {
+'    accountCashFlowId: Number 记录ID primary key
+'    dstAccountId: Number 资金目的地账户ID
+'    srcAccountId: Number 资金源账户ID
+'    amount: Number 资金总额度
+'    bookBalance: 当前账面余额
+'    date: Date 资金发生日期
+'    dateOrder: Number 资金发生日排序
+'    subAccountCashFlow: Array<SubAccountCashFlow> 分单
+'}
 
 
-object AccountCashFlow {
-    accountCashFlowId: Number 记录ID primary key
-    dstAccountId: Number 资金目的地账户ID
-    srcAccountId: Number 资金源账户ID
-    amount: Number 资金总额度
-    bookBalance: 当前账面余额
-    date: Date 资金发生日期
-    dateOrder: Number 资金发生日排序
-    subAccountCashFlow: Array<SubAccountCashFlow> 分单
-}
+'object Fund {
+'    code: String 基金代码 primary key
+'    name: String 基金名称
+'    netWorth: Number 基金净值
+'    netWorthDate: Date 基金净值最后更新日期
+'    createTime: Timestamp 记录创建时间
+'    updateTime: Timestamp 记录更新时间
+'}
 
-object FundCashFlow {
-    code: String 基金代码
-    amount: Number 资金
-    serviceChargeRate: Number 手续费率
-    serviceChargeAmount: Number 手续费
-    share: Number 份额
-    netWorth: Number 净值
-    bookShare: Number 账面份额
-}
-
-object InvestmentCashFlow {
-    code: String 投资产品代码
-    amount: Number
-}
-
-FundCashFlow --> Fund
-
-map SubAccountCashFlow {
-    fund *-> FundCashFlow
-    investment *-> InvestmentCashFlow
-}
-
-
-
-SubAccountCashFlow --o AccountCashFlow::subAccountCashFlow : 聚合
-AccountCashFlow --o Account : 聚合
-AccountCashFlow --o SubAccount : 聚合
-
-object Fund {
-    code: String 基金代码 primary key
-    name: String 基金名称
-    type: String 基金类型
-    netWorth: Number 基金净值
-    netWorthDate: Date 基金净值最后更新日期
-    manager: 基金经理
-    createTime: Timestamp 记录创建时间
-    updateTime: Timestamp 记录更新时间
-}
+'object Stock {
+'    code: String 股票代码 primary key
+'    name: String 股票名词
+'    price: String 股票价格
+'    createTime: Timestamp 记录创建时间
+'    updateTime: Timestamp 记录更新时间
+'}
 
 'object FundFlow {
 '    fundFlowId: Number 记录ID primary key
@@ -106,15 +60,7 @@ object Fund {
 '    dayGrowth: Number
 '}
 
-object Stock {
-    code: String 股票代码 primary key
-    name: String 股票名词
-    price: String 股票价格
-}
 
 'FundFlow::code --o Fund : 聚合
-
-
-
 
 @enduml

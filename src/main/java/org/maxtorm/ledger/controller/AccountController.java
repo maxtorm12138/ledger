@@ -1,37 +1,29 @@
 package org.maxtorm.ledger.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.maxtorm.ledger.LedgerAPIResponse;
+import lombok.Getter;
 import org.maxtorm.ledger.dao.Account;
-import org.maxtorm.ledger.dao.AccountRepository;
-import org.maxtorm.ledger.error.ErrorCode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.maxtorm.ledger.service.AccountService;
+import org.maxtorm.ledger.service.FundService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/account")
+@AllArgsConstructor
 public class AccountController {
+    private static final Logger logger = LoggerFactory.getLogger(FundService.class);
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
-    private record AccountCreateRequest(String name) {}
-
-    @PostMapping("create")
-    public LedgerAPIResponse<Void> create(@RequestBody AccountCreateRequest request) {
-        Account account = new Account();
-        account.setName(request.name);
-        accountRepository.save(account);
-        return new LedgerAPIResponse<>(ErrorCode.Success);
-    }
-
-    @PostMapping("delete")
-    public void delete() {
-
+    @GetMapping("/create")
+    @ResponseBody
+    public Response<Account> create() {
+        Response<Account> response = new Response<>();
+        response.setData(accountService.create());
+        return response;
     }
 }
