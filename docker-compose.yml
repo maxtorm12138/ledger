@@ -6,6 +6,3 @@ services:
       context: ./
       dockerfile: Dockerfile
     environment:
-    depends_on:
-      - mongodb
-

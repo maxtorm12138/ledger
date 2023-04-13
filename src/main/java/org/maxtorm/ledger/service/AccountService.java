@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class AccountService {
-
     private static final Logger logger = LoggerFactory.getLogger(FundService.class);
 
     private AccountRepository accountRepository;
