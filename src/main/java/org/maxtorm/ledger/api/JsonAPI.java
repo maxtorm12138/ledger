@@ -2,9 +2,8 @@ package org.maxtorm.ledger.api;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.maxtorm.ledger.error.ErrorCode;
+import org.maxtorm.ledger.util.ErrorCode;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.http.HttpClient;

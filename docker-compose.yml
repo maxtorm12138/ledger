@@ -5,4 +5,5 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    environment:
+    volumes:
+      - E:\database:/database

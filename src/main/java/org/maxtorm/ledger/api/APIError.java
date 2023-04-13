@@ -1,7 +1,7 @@
 package org.maxtorm.ledger.api;
 
 import lombok.Getter;
-import org.maxtorm.ledger.error.ErrorCode;
+import org.maxtorm.ledger.util.ErrorCode;
 import org.slf4j.helpers.MessageFormatter;
 
 public class APIError extends RuntimeException {

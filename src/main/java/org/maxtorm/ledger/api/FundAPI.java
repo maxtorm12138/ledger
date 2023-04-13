@@ -1,7 +1,7 @@
 package org.maxtorm.ledger.api;
 
 import org.maxtorm.ledger.api.record.BasicFundInfo;
-import org.maxtorm.ledger.error.ErrorCode;
+import org.maxtorm.ledger.util.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriComponentsBuilder;
