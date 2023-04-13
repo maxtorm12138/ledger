@@ -23,4 +23,5 @@ public class Response<T> {
     @Setter
     @JsonSerialize(nullsUsing = ResponseNullSerializer.class)
     T data = null;
+
 }
