@@ -10,35 +10,50 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@Entity
 @Getter
 @Setter
+@Entity(name = "account")
 @Table(name = "account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "account_id", columnDefinition = "TEXT")
+    @Column(name = "account_id", columnDefinition = "VARCHAR", nullable = false)
     private String accountId;
 
-    @Column(name = "root_account_id", columnDefinition = "TEXT")
+    @Column(name = "root_account_id", columnDefinition = "VARCHAR", nullable = false)
     private String rootAccountId;
 
-    @Column(name = "parent_account_id", columnDefinition = "TEXT")
-    private String parentAccountId;
+    @Column(name = "parent_account_id", columnDefinition = "VARCHAR", nullable = false)
+    private String parentAccountId = "";
 
 
-    @Column(name = "name", columnDefinition = "TEXT")
+    @Column(name = "name", columnDefinition = "VARCHAR", nullable = false)
     private String name;
 
 
-    @Column(name = "icon_url", columnDefinition = "TEXT")
+    @Column(name = "icon_url", columnDefinition = "VARCHAR", nullable = false)
     private String iconUrl;
 
     @CreationTimestamp
-    @Column(name = "create_time")
+    @Column(name = "create_time", nullable = false)
     private Date createTime;
 
     @UpdateTimestamp
-    @Column(name = "update_time")
+    @Column(name = "update_time", nullable = false)
     private Date updateTime;
+
+    @PostPersist
+    void updateRootAccountId() {
+        if (rootAccountId == null || rootAccountId.isEmpty()) {
+            rootAccountId = accountId;
+        }
+
+        if (parentAccountId == null || parentAccountId.isEmpty()) {
+            parentAccountId = accountId;
+        }
+
+        if (iconUrl == null || iconUrl.isEmpty()) {
+            iconUrl = "https://www.google.com.hk/favicon.ico";
+        }
+    }
 }

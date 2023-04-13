@@ -21,7 +21,7 @@ public class AccountService {
         Account account = new Account();
         account.setName("test");
 
-        accountRepository.save(account);
+        account = accountRepository.save(account);
         return account;
     }
 }
