@@ -1,28 +1,24 @@
-package org.maxtorm.ledger.obj;
+package org.maxtorm.ledger.po;
 
 import jakarta.persistence.*;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.net.URI;
-import java.util.UUID;
+import lombok.*;
 
 @Getter
 @Setter
+@ToString(callSuper = true)
 @Entity(name = "account")
-@Table(name = "account")
-public class Account extends AbstractTimestampEntity {
+@Table(name = "account", indexes = {@Index(name = "index_root_account_id", columnList= "root_account_id"), @Index(name = "parent_account_id", columnList = "parent_account_id")})
+public class AccountPo extends AbstractTimestampEntity {
     @Id
     @Column(name = "account_id", columnDefinition = "VARCHAR", nullable = false)
-    private String accountId = UUID.randomUUID().toString();
+    private String accountId = "";
 
     @Column(name = "root_account_id", columnDefinition = "VARCHAR", nullable = false)
-    private String rootAccountId = accountId;
+    private String rootAccountId = "";
 
     @Column(name = "parent_account_id", columnDefinition = "VARCHAR", nullable = false)
-    private String parentAccountId = accountId;
+    private String parentAccountId = "";
 
     @Column(name = "depth", columnDefinition = "BIGINT", nullable = false)
     private Integer depth = 0;
@@ -31,7 +27,7 @@ public class Account extends AbstractTimestampEntity {
     private String name = "";
 
     @Column(name = "icon_url", columnDefinition = "VARCHAR", nullable = false)
-    private String iconUrl = "https://baidu.com";
+    private String iconUrl = "";
 
     @Column(name = "balance", columnDefinition = "INTEGER", nullable = false)
     private Long balance = 0L;
@@ -41,13 +37,4 @@ public class Account extends AbstractTimestampEntity {
 
     @Column(name = "total_outflow", columnDefinition = "INTEGER", nullable = false)
     private Long totalOutflow = 0L;
-
-    public URI getIconUrl() {
-        return URI.create(iconUrl);
-    }
-
-    public void setIconUrl(URI iconUrl) {
-        this.iconUrl = iconUrl.toString();
-    }
-
 }

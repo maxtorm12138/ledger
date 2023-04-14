@@ -1,62 +1,60 @@
 package org.maxtorm.ledger.controller;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.maxtorm.ledger.service.AccountService;
-import org.maxtorm.ledger.service.FundService;
+import org.maxtorm.ledger.util.ErrorCode;
 
-import org.maxtorm.ledger.obj.Account;
-
-import org.maxtorm.ledger.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
+import org.springframework.http.MediaType;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.AllArgsConstructor;
 
-import java.net.URI;
-import java.util.UUID;
+import org.maxtorm.ledger.api.Api;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/account")
 @AllArgsConstructor
 public class AccountController {
-    private static final Logger logger = LoggerFactory.getLogger(FundService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private AccountService accountService;
 
+    private TransactionTemplate transactionTemplate;
 
-    @Getter
-    @Setter
-    private static class AccountCreateRequest {
-        private String name;
-        private String iconUrl;
-        private String parentAccountId;
-        private String rootAccountId;
-        private Integer depth;
-    }
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Api.AccountCreateResponse create(@RequestBody Api.AccountCreateRequest request) {
+        logger.debug("request: {}", request);
+        // start transaction
+        return transactionTemplate.execute(status -> {
+            Api.AccountCreateResponse.Builder responseBuilder = Api.AccountCreateResponse.newBuilder();
+            Api.Account accountToCreate = request.getAccount();
 
-    @Getter
-    @Setter
-    private static class AccountCreateResponse {
-        private Account account;
-    }
+            Optional<Api.Account> rootAccount = Optional.empty(), parentAccount = Optional.empty();
 
-    @PostMapping("/create")
-    @ResponseBody
-    public Result<AccountCreateResponse> create(@RequestBody AccountCreateRequest request) {
-        Account account = new Account();
-        account.setName(request.getName());
-        account.setIconUrl(URI.create(request.iconUrl));
-        account.setParentAccountId(request.getParentAccountId());
-        account.setRootAccountId(request.getRootAccountId());
-        account.setDepth(request.getDepth());
+            // search root account
+            if (!accountToCreate.getRootAccountId().isEmpty()) {
+                rootAccount = accountService.getByAccountId(accountToCreate.getRootAccountId());
+                logger.debug("find root account: {}", rootAccount.orElseThrow(() -> new IllegalArgumentException(MessageFormatter.format("rootAccountId {} invalid", accountToCreate.getRootAccountId()).getMessage())));
+            }
 
-        account = accountService.create(account);
+            if (!accountToCreate.getParentAccountId().isEmpty()) {
+                parentAccount = accountService.getByAccountId(accountToCreate.getParentAccountId());
+                logger.debug("find root account: {}", parentAccount.orElseThrow(() -> new IllegalArgumentException(MessageFormatter.format("parentAccountId {} invalid", accountToCreate.getRootAccountId()).getMessage())));
+            }
 
-        AccountCreateResponse response = new AccountCreateResponse();
-        response.setAccount(account);
+            Api.Account accountCreated = accountService.create(accountToCreate, rootAccount, parentAccount);
 
-        return Result.success(response);
+            responseBuilder.setAccount(accountCreated);
+            responseBuilder.setErrorCode(ErrorCode.Success.ordinal());
+            responseBuilder.setErrorMessage("success");
+
+
+            return responseBuilder.build();
+        });
     }
 }
