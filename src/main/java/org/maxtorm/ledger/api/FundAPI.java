@@ -32,7 +32,7 @@ public class FundAPI extends JsonAPI {
 
         if (fundInfos.isEmpty()) {
             logger.warn("no such fund: {}", code);
-            throw new APIError(ErrorCode.NoSuchFund, "no such fund: {}", code);
+            throw new APIError(ErrorCode.NoSuchElement, "no such fund: {}", code);
         }
 
         if (fundInfos.size() > 1) {

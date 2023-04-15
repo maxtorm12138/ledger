@@ -1,9 +1,30 @@
 version: '3.4'
 services:
+  database:
+    container_name: 'database'
+    image: mysql:8.0.32
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=ledger
+    command:
+      - --character-set-server=utf8mb4
+    ports:
+      - "3306:3306"
+
   ledger:
     container_name: 'ledger'
+    image: ledger:0.0.1
     build:
       context: ./
       dockerfile: Dockerfile
-    volumes:
-      - E:\database:/database
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/ledger
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database

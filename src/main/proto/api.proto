@@ -2,6 +2,12 @@ syntax="proto3";
 
 package org.maxtorm.ledger.api;
 
+message AccountSummary {
+  string account_summary_id = 2;
+  string commodity = 3;
+  int64 amount = 4;
+}
+
 message Account {
   string account_id = 1;
   string root_account_id = 2;
@@ -9,8 +15,7 @@ message Account {
   string name = 4;
   string icon_url = 5;
   int32 depth = 6;
-  string create_time = 7;
-  string update_time = 8;
+  repeated AccountSummary account_summaries = 7;
 }
 
 message Transaction {
@@ -21,13 +26,24 @@ message Transaction {
   int64 amount = 5;
 }
 
-message AccountCreateRequest {
+message CreateAccountRequest {
   Account account = 1;
 }
 
-message AccountCreateResponse {
+message CreateAccountResponse {
   Account account = 1;
 
+  int64 error_code = 100;
+  string error_message = 101;
+}
+
+message AccountTree {
+  Account self = 1;
+  repeated AccountTree child = 2;
+}
+
+message GetAccountTreeResponse {
+  repeated AccountTree account_tree = 1;
   int64 error_code = 100;
   string error_message = 101;
 }

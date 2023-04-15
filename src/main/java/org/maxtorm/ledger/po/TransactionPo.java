@@ -12,19 +12,19 @@ import lombok.ToString;
 @Table(name = "user_transaction", indexes = {@Index(name = "index_transaction_id", columnList = "transaction_id"),})
 public class TransactionPo extends AbstractTimestampEntity {
     @Id
-    @Column(name = "transaction_record_id", columnDefinition = "VARCHAR", nullable = false)
+    @Column(name = "transaction_record_id", nullable = false)
     private String transactionRecordId = "";
 
-    @Column(name = "transaction_id", columnDefinition = "VARCHAR", nullable = false)
+    @Column(name = "transaction_id", nullable = false)
     private String transactionId = "";
 
-    @Column(name = "source_account_id", columnDefinition = "VARCHAR", nullable = false)
+    @Column(name = "source_account_id", nullable = false)
     private String sourceAccountId = "";
 
-    @Column(name = "destination_account_id", columnDefinition = "VARCHAR", nullable = false)
+    @Column(name = "destination_account_id", nullable = false)
     private String destinationAccountId = "";
 
-    @Column(name = "amount", columnDefinition = "BIGINT", nullable = false)
+    @Column(name = "amount", nullable = false)
     private Long amount = 0L;
 
 }

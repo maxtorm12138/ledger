@@ -4,6 +4,8 @@ public enum ErrorCode {
     Success,
     NetworkError,
     LogicError,
-    NoSuchFund,
-    MethodNotSupported
+    NoSuchElement,
+    MethodNotSupported,
+    IllegalArgument,
+    UnhandledException
 }

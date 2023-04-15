@@ -5,7 +5,7 @@ import org.maxtorm.ledger.util.ErrorCode;
 import org.slf4j.helpers.MessageFormatter;
 
 public class APIError extends RuntimeException {
-    APIError(ErrorCode errorCode, String format, Object ... objects) {
+    APIError(ErrorCode errorCode, String format, Object... objects) {
         super(MessageFormatter.format(format, objects).getMessage());
         this.errorCode = errorCode;
     }

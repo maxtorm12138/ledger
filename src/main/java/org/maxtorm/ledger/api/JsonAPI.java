@@ -34,5 +34,5 @@ public abstract class JsonAPI {
         }
     }
 
-    private HttpClient httpClient = HttpClient.newBuilder().build();
+    private final HttpClient httpClient = HttpClient.newBuilder().build();
 }

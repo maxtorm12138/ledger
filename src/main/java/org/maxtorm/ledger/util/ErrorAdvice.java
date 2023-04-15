@@ -7,6 +7,8 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.NoSuchElementException;
+
 @ControllerAdvice
 public class ErrorAdvice {
 
@@ -20,8 +22,18 @@ public class ErrorAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Result.fail(ErrorCode.LogicError, ex.getMessage()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Result<Void>> handleIllegalArgumentException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Result.fail(ErrorCode.IllegalArgument, ex.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Result<Void>> handleNoSuchElementException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Result.fail(ErrorCode.NoSuchElement, ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result<Void>> handleException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Result.fail(ErrorCode.LogicError, ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Result.fail(ErrorCode.UnhandledException, ex.getMessage()));
     }
 }

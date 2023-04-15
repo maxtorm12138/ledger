@@ -17,9 +17,9 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @ToString
 public abstract class AbstractTimestampEntity {
-    @Column(name = "create_time", columnDefinition = "TEXT", nullable = false, updatable = false)
+    @Column(name = "create_time", nullable = false, updatable = false)
     protected String createTime = "1970-01-01T00:00:00.0Z";
-    @Column(name = "update_time", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "update_time", nullable = false)
     protected String updateTime = "1970-01-01T00:00:00.0Z";
 
     public ZonedDateTime getCreateTime() {
