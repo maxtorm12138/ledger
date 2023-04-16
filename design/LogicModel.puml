@@ -2,16 +2,30 @@
 'https://plantuml.com/object-diagrm
 
 object Account {
-    autoId: Number 自动ID primary key
-
-    accountId: String 账户ID UNIQUE
+    accountId: String 账户ID PRIMARY KEY
     rootAccountId: String 根账户ID
     parentAccountId: String 父账户ID
-
     depth: Number 深度
     name: String 帐号名称
+    iconUrl: String 账户icon
     createTime: Timestamp 记录创建时间
     updateTime: Timestamp 记录更新时间
+}
+
+object AccountSummary {
+    accountSummaryId: String 账户统计ID
+    accountId: String 关联账户ID
+    commodity: String 商品名称
+    amount: Long 额度
+}
+
+Account --> AccountSummary : 1:N
+
+object CommodityPrice {
+    commodityPriceId: String 商品价格记录ID
+    sourceCommodity: String 源商品
+    destinationCommodity: String 目标商品
+    price: Long 价格
 }
 
 object Transaction {

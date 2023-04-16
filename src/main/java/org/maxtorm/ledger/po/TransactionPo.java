@@ -12,6 +12,7 @@ import lombok.ToString;
 @Table(name = "user_transaction", indexes = {@Index(name = "index_transaction_id", columnList = "transaction_id"),})
 public class TransactionPo extends AbstractTimestampEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "transaction_record_id", nullable = false)
     private String transactionRecordId = "";
 
@@ -24,7 +25,31 @@ public class TransactionPo extends AbstractTimestampEntity {
     @Column(name = "destination_account_id", nullable = false)
     private String destinationAccountId = "";
 
-    @Column(name = "amount", nullable = false)
-    private Long amount = 0L;
+    @Column(name = "source_amount", nullable = false)
+    private Long source_amount = 0L;
 
+    @Column(name = "destination_amount", nullable = false)
+    private Long destination_amount = 0L;
+
+    @Column(name = "source_commodity", nullable = false)
+    private String sourceCommodity;
+
+    @Column(name = "destination_commodity", nullable = false)
+    private String destinationCommodity;
+
+    public CommodityPo getSourceCommodity() {
+        return CommodityPo.of(sourceCommodity);
+    }
+
+    public void setSourceCommodity(CommodityPo sourceCommodity) {
+        this.sourceCommodity = sourceCommodity.toString();
+    }
+
+    public CommodityPo getDestinationCommodity() {
+        return CommodityPo.of(destinationCommodity);
+    }
+
+    public void setDestinationCommodity(CommodityPo destinationCommodity) {
+        this.destinationCommodity = destinationCommodity.toString();
+    }
 }

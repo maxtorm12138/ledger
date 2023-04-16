@@ -19,8 +19,17 @@ public class AccountSummaryPo extends AbstractTimestampEntity {
     @Column(name = "account_id")
     private String accountId = "";
 
+
     @Column(name = "commodity")
     private String commodity = "";
+
+    public CommodityPo getCommodity() {
+        return CommodityPo.of(commodity);
+    }
+
+    public void setCommodity(CommodityPo commodity) {
+        this.commodity = commodity.toString();
+    }
 
     @Column(name = "amount")
     private Long amount = 0L;

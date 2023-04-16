@@ -14,12 +14,25 @@ services:
     ports:
       - "3306:3306"
 
+  futuopend:
+    container_name: 'futuopend'
+    image: futuopend:7.1.3308
+    build:
+      context: ./
+      dockerfile: DockerFile_FutuOpenD
+    volumes:
+      - E:\futuopend:/config
+    stdin_open: true
+    tty: true
+    ports:
+      - "11111:11111"
+
   ledger:
     container_name: 'ledger'
     image: ledger:0.0.1
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_Ledger
     environment:
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}

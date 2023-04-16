@@ -33,7 +33,7 @@ public class AccountPo extends AbstractTimestampEntity {
     @Column(name = "icon_url", nullable = false, length = 1024)
     private String iconUrl = "";
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private List<AccountSummaryPo> accountSummaries = new ArrayList<>();
 }
