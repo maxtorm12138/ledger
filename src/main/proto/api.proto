@@ -1,33 +1,8 @@
 syntax="proto3";
 
-package org.maxtorm.ledger.api;
+import "entity.proto";
 
-message AccountSummary {
-  string account_id = 1;
-  string account_summary_id = 2;
-  string commodity = 3;
-  int64 amount = 4;
-}
-
-message Account {
-  string account_id = 1;
-  string root_account_id = 2;
-  string parent_account_id = 3;
-  string name = 4;
-  string icon_url = 5;
-  int32 depth = 6;
-  repeated AccountSummary account_summaries = 7;
-}
-
-message Transaction {
-  string transaction_id = 1;
-  string source_account_id = 2;
-  string destination_account_id = 3;
-  string source_commodity = 4;
-  string destination_commodity = 5;
-  int64  source_amount = 6;
-  int64  destination_amount = 7;
-}
+package org.maxtorm.ledger.proto;
 
 message CreateAccountRequest {
   Account account = 1;
@@ -40,10 +15,6 @@ message CreateAccountResponse {
   string error_message = 101;
 }
 
-message AccountTree {
-  Account self = 1;
-  repeated AccountTree child = 2;
-}
 
 message GetAccountTreeResponse {
   repeated AccountTree account_tree = 1;

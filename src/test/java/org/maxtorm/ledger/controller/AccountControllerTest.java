@@ -2,7 +2,8 @@ package org.maxtorm.ledger.controller;
 
 
 import org.junit.jupiter.api.Test;
-import org.maxtorm.ledger.api.Api;
+import org.maxtorm.ledger.proto.Api;
+import org.maxtorm.ledger.proto.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,15 +14,13 @@ public class AccountControllerTest {
     @Autowired
     private AccountController accountController;
     @Test
-    public void create() {
+    public void open() {
         var requestBuilder = Api.CreateAccountRequest.newBuilder();
-        var accountBuilder = Api.Account.newBuilder();
-        accountBuilder.setDepth(0);
+        var accountBuilder = Entity.Account.newBuilder();
         accountBuilder.setName("root");
         requestBuilder.setAccount(accountBuilder);
 
-        var response = accountController.create(requestBuilder.build());
+        var response = accountController.open(requestBuilder.build());
         assertThat(response.getErrorCode()).isEqualTo(0);
-        var root = response.getAccount();
     }
 }

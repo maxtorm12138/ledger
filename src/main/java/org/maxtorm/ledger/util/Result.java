@@ -26,7 +26,7 @@ public class Result<T> {
 
     @Getter
     @Setter
-    @JsonSerialize(nullsUsing = NullSerializer.class)
+    @JsonSerialize(nullsUsing = NullObjectSerializer.class)
     T data = null;
 
 

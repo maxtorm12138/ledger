@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class NullSerializer extends JsonSerializer<Object> {
+public class NullObjectSerializer extends JsonSerializer<Object> {
     @Override
     public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();

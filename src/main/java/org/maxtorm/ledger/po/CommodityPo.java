@@ -54,5 +54,10 @@ public class CommodityPo {
     public static CommodityPo of(String commodity) {
         return new CommodityPo(commodity);
     }
+
+    public static CommodityPo CurrencyCNY = CommodityPo.of("Currency.CNY");
+    public static CommodityPo CurrencyHKD = CommodityPo.of("Currency.HKD");
+    public static CommodityPo CurrencyUSD = CommodityPo.of("Currency.USD");
 }
+
 

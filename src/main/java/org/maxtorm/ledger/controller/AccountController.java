@@ -1,7 +1,7 @@
 package org.maxtorm.ledger.controller;
 
 import lombok.AllArgsConstructor;
-import org.maxtorm.ledger.api.Api;
+import org.maxtorm.ledger.proto.Api;
 import org.maxtorm.ledger.service.AccountService;
 import org.maxtorm.ledger.util.ErrorCode;
 import org.slf4j.Logger;
@@ -17,12 +17,12 @@ public class AccountController {
 
     private AccountService accountService;
 
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Api.CreateAccountResponse create(@RequestBody Api.CreateAccountRequest request) {
+    @PostMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Api.CreateAccountResponse open(@RequestBody Api.CreateAccountRequest request) {
         logger.trace("request: {}", request);
 
         var responseBuilder = Api.CreateAccountResponse.newBuilder();
-        var accountCreated = accountService.create(request.getAccount());
+        var accountCreated = accountService.open(request.getAccount());
 
         responseBuilder.setAccount(accountCreated);
         responseBuilder.setErrorCode(ErrorCode.Success.ordinal());

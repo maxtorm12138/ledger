@@ -8,9 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(callSuper = true)
-@Entity(name = "account_summary")
-@Table(name = "account_summary", indexes = {@Index(name = "unique_account_id_commodity", columnList = "account_id, commodity")})
-public class AccountSummaryPo extends AbstractTimestampEntity {
+@Entity(name = "account_balance")
+@Table(name = "account_balance", indexes = {@Index(name = "unique_account_id_commodity", columnList = "account_id, commodity")})
+public class AccountBalancePo extends AbstractTimestampEntity {
     @Id
     @Column(name = "account_summary_id")
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -19,18 +19,11 @@ public class AccountSummaryPo extends AbstractTimestampEntity {
     @Column(name = "account_id")
     private String accountId = "";
 
-
     @Column(name = "commodity")
-    private String commodity = "";
-
-    public CommodityPo getCommodity() {
-        return CommodityPo.of(commodity);
-    }
-
-    public void setCommodity(CommodityPo commodity) {
-        this.commodity = commodity.toString();
-    }
+    @Convert(converter = CommodityPo.CommodityPoConverter.class)
+    private CommodityPo commodity;
 
     @Column(name = "amount")
     private Long amount = 0L;
+
 }
