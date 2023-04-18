@@ -30,6 +30,10 @@ public class AccountPo extends AbstractTimestampEntity {
     @Column(name = "icon_url", nullable = false, length = 1024)
     private String iconUrl = "";
 
+    @Column(name = "major_commodity")
+    @Convert(converter = CommodityPo.CommodityPoConverter.class)
+    private CommodityPo majorCommodity = CommodityPo.CurrencyCNY;
+
     @Column(name = "extra_info", nullable = false, length = 2048)
     @Convert(converter = AccountExtraInfoPo.AccountExtraInfoConverter.class)
     private AccountExtraInfoPo extraInfo = new AccountExtraInfoPo();

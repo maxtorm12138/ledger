@@ -14,6 +14,7 @@ message Account {
   string parent_account_id = 3;
   string name = 4;
   string icon_url = 5;
+  Commodity major_commodity = 6;
   repeated AccountBalance account_balance = 7;
 }
 
