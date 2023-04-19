@@ -2,10 +2,8 @@ package org.maxtorm.ledger.util;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,24 +28,23 @@ public class Result<T> {
     T data = null;
 
 
-    public static <T> Result<T> success(T data) {
+    public static <T> Result<T> success(@NonNull T data) {
         return new Result<>(ErrorCode.Success, ErrorCode.Success.name(), ErrorCode.Success.name(), data);
     }
 
-    public static <T> Result<T> fail(ErrorCode errorCode) {
+    public static <T> Result<T> fail(@NonNull ErrorCode errorCode) {
         return new Result<>(errorCode, errorCode.name(), errorCode.name(), null);
     }
 
-    public static <T> Result<T> fail(ErrorCode errorCode, T data) {
+    public static <T> Result<T> fail(ErrorCode errorCode, @NonNull T data) {
         return new Result<>(errorCode, errorCode.name(), errorCode.name(), data);
     }
 
-    public static <T> Result<T> fail(ErrorCode errorCode, String message) {
+    public static <T> Result<T> fail(ErrorCode errorCode, @NonNull String message) {
         return new Result<>(errorCode, errorCode.name(), message, null);
     }
 
     public static <T> Result<T> fail(ErrorCode errorCode, String message, T data) {
         return new Result<>(errorCode, errorCode.name(), message, data);
     }
-
 }

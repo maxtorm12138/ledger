@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.maxtorm.ledger.bo.Commodity;
 
 @Getter
 @Setter
@@ -15,6 +13,7 @@ import java.util.List;
 @Table(name = "account", indexes = {@Index(name = "index_root_account_id", columnList = "root_account_id"), @Index(name = "parent_account_id", columnList = "parent_account_id"), @Index(name = "unique_name", columnList = "name", unique = true)})
 public class AccountPo extends AbstractTimestampEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "account_id", nullable = false)
     private String accountId = "";
 
@@ -31,14 +30,10 @@ public class AccountPo extends AbstractTimestampEntity {
     private String iconUrl = "";
 
     @Column(name = "major_commodity")
-    @Convert(converter = CommodityPo.CommodityPoConverter.class)
-    private CommodityPo majorCommodity = CommodityPo.CurrencyCNY;
+    @Convert(converter = Commodity.CommodityConverter.class)
+    private Commodity majorCommodity = Commodity.CurrencyCNY;
 
     @Column(name = "extra_info", nullable = false, length = 2048)
     @Convert(converter = AccountExtraInfoPo.AccountExtraInfoConverter.class)
     private AccountExtraInfoPo extraInfo = new AccountExtraInfoPo();
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private List<AccountBalancePo> accountBalance = new ArrayList<>();
 }

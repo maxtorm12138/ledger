@@ -2,21 +2,28 @@ package org.maxtorm.ledger.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+
+import org.maxtorm.ledger.bo.Account;
+import org.maxtorm.ledger.bo.AccountBalance;
+import org.maxtorm.ledger.bo.AccountTree;
+
 import org.maxtorm.ledger.dao.AccountRepository;
 import org.maxtorm.ledger.dao.AccountBalanceRepository;
+
 import org.maxtorm.ledger.mapper.AccountBalanceMapper;
 import org.maxtorm.ledger.mapper.AccountMapper;
+
 import org.maxtorm.ledger.po.AccountBalancePo;
 import org.maxtorm.ledger.po.AccountPo;
-import org.maxtorm.ledger.proto.Entity;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -29,28 +36,24 @@ public class AccountService {
     private AccountBalanceRepository accountBalanceRepository;
 
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Entity.Account open(Entity.Account account) {
-        var accountToCreate = AccountMapper.INSTANCE.Convert(account);
-        accountToCreate.setAccountId(UUID.randomUUID().toString());
+    public Account open(Account account) {
+        var accountPo = AccountMapper.INSTANCE.Convert(account);
 
-        // check arguments
-        if (!accountToCreate.getRootAccountId().isEmpty() && !accountRepository.existsAccountPoByAccountId(accountToCreate.getRootAccountId())) {
-            throw new IllegalArgumentException(MessageFormatter.format("rootAccountId: {} not exists", accountToCreate.getRootAccountId()).getMessage());
+        if (!accountPo.getParentAccountId().isEmpty()) {
+            accountRepository.getAccountPoByAccountId(accountPo.getParentAccountId()).orElseThrow( () -> new IllegalArgumentException(MessageFormatter.format("parentAccount: {} not exists", accountPo.getParentAccountId()).getMessage()));
         }
 
-        if (!accountToCreate.getParentAccountId().isEmpty() && !accountRepository.existsAccountPoByAccountId(accountToCreate.getParentAccountId())) {
-            throw new IllegalArgumentException(MessageFormatter.format("parentAccountId: {} not exists", accountToCreate.getParentAccountId()).getMessage());
+        if (!accountPo.getRootAccountId().isEmpty()) {
+            accountRepository.getAccountPoByAccountId(account.getRootAccountId()).orElseThrow(() -> new IllegalArgumentException(MessageFormatter.format("rootAccount: {} not exists", accountPo.getRootAccountId()).getMessage()));
         }
 
+        var accountPoCreated = accountRepository.save(accountPo);
 
-        // initialize some well-known commodity summary
-        var accountCreated = AccountMapper.INSTANCE.Convert(accountRepository.save(accountToCreate));
-        logger.trace("accountCreated: {}", accountCreated);
-        return accountCreated;
+        return AccountMapper.INSTANCE.Convert(accountPoCreated);
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Entity.AccountBalance addAccountBalance(Entity.AccountBalance balance, Long difference) {
+    public AccountBalance addAccountBalance(AccountBalance balance, Long difference) {
         var paramBalancePo = AccountBalanceMapper.INSTANCE.Convert(balance);
         paramBalancePo.setAmount(difference);
 
@@ -67,8 +70,8 @@ public class AccountService {
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public List<Entity.AccountTree> tree(String accountId) {
-        var accountTreeList = new ArrayList<Entity.AccountTree>();
+    public List<AccountTree> tree(String accountId) {
+        var accountTreeList = new ArrayList<AccountTree>();
 
         List<AccountPo> accountInLevel;
         if (accountId.isEmpty()) {
@@ -78,10 +81,10 @@ public class AccountService {
         }
 
         accountInLevel.forEach(accountPo -> {
-            var accountTreeBuilder = Entity.AccountTree.newBuilder();
-            accountTreeBuilder.setSelf(AccountMapper.INSTANCE.Convert(accountPo));
-            accountTreeBuilder.addAllChild(tree(accountPo.getAccountId()));
-            accountTreeList.add(accountTreeBuilder.build());
+            AccountTree accountTree = new AccountTree();
+            accountTree.setAccount(AccountMapper.INSTANCE.Convert(accountPo));
+            accountTree.setChildren(tree(accountPo.getAccountId()));
+            accountTreeList.add(accountTree);
         });
 
         return accountTreeList;

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.maxtorm.ledger.bo.Commodity;
 
 @Getter
 @Setter
@@ -37,19 +38,19 @@ public class TransactionPo extends AbstractTimestampEntity {
     @Column(name = "destination_commodity", nullable = false)
     private String destinationCommodity;
 
-    public CommodityPo getSourceCommodity() {
-        return CommodityPo.of(sourceCommodity);
+    public Commodity getSourceCommodity() {
+        return Commodity.of(sourceCommodity);
     }
 
-    public void setSourceCommodity(CommodityPo sourceCommodity) {
+    public void setSourceCommodity(Commodity sourceCommodity) {
         this.sourceCommodity = sourceCommodity.toString();
     }
 
-    public CommodityPo getDestinationCommodity() {
-        return CommodityPo.of(destinationCommodity);
+    public Commodity getDestinationCommodity() {
+        return Commodity.of(destinationCommodity);
     }
 
-    public void setDestinationCommodity(CommodityPo destinationCommodity) {
+    public void setDestinationCommodity(Commodity destinationCommodity) {
         this.destinationCommodity = destinationCommodity.toString();
     }
 }

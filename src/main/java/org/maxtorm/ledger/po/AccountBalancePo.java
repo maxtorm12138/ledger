@@ -2,6 +2,7 @@ package org.maxtorm.ledger.po;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.maxtorm.ledger.bo.Commodity;
 
 @Getter
 @Setter
@@ -20,8 +21,8 @@ public class AccountBalancePo extends AbstractTimestampEntity {
     private String accountId = "";
 
     @Column(name = "commodity")
-    @Convert(converter = CommodityPo.CommodityPoConverter.class)
-    private CommodityPo commodity;
+    @Convert(converter = Commodity.CommodityConverter.class)
+    private Commodity commodity;
 
     @Column(name = "amount")
     private Long amount = 0L;

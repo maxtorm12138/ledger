@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+import org.maxtorm.ledger.bo.Commodity;
 import org.maxtorm.ledger.util.NullObjectSerializer;
 import org.slf4j.helpers.MessageFormatter;
 
@@ -56,7 +57,7 @@ public class AccountExtraInfoPo {
         private BigDecimal dilutedCostPrice = BigDecimal.valueOf(0L);
 
         // 计价货币
-        private CommodityPo costCommodity = CommodityPo.CurrencyCNY;
+        private Commodity costCommodity = Commodity.CurrencyCNY;
 
         // 总买入
         private BigDecimal totalBuyInAmount = BigDecimal.valueOf(0L);
