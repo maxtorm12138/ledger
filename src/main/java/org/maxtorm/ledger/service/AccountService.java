@@ -6,6 +6,7 @@ import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.bo.AccountBalance;
 import org.maxtorm.ledger.bo.AccountTree;
 import org.maxtorm.ledger.bo.Commodity;
+import org.maxtorm.ledger.dao.AccountBalanceInsertRepository;
 import org.maxtorm.ledger.dao.AccountBalanceRepository;
 import org.maxtorm.ledger.dao.AccountRepository;
 import org.maxtorm.ledger.mapper.AccountBalanceMapper;
@@ -29,6 +30,7 @@ public class AccountService {
 
     private AccountRepository accountRepository;
     private AccountBalanceRepository accountBalanceRepository;
+    private AccountBalanceInsertRepository accountBalanceInsertRepository;
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional(value = Transactional.TxType.REQUIRED)
@@ -97,7 +99,10 @@ public class AccountService {
         }
 
         path.forEach(pathAccountId -> {
-            accountBalanceRepository.upsertAccountBalancePoBalance(pathAccountId, commodity.toString(), amount);
+            AccountBalancePo accountBalancePo = new AccountBalancePo();
+            accountBalancePo.setAccountId(pathAccountId);
+            accountBalancePo.setCommodity(commodity);
+            accountBalanceInsertRepository.addBalance(accountBalancePo, amount);
         });
     }
 }
