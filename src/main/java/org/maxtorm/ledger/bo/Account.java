@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 @Getter
 @Setter
 public class Account {

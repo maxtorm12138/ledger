@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.maxtorm.ledger.bo.Commodity;
+import org.maxtorm.ledger.bo.TransactionExtraInfo;
 
 import java.math.BigDecimal;
 
@@ -38,4 +39,8 @@ public class TransactionPo extends AbstractTimestampEntity {
 
     @Column(name = "destination_commodity_amount", nullable = false)
     private BigDecimal destinationCommodityAmount = BigDecimal.ZERO;
+
+    @Column(name = "transaction_extra_info", nullable = false, length = 2048)
+    @Convert(converter = TransactionExtraInfo.TransactionExtraInfoConverter.class)
+    private TransactionExtraInfo transactionExtraInfo = new TransactionExtraInfo();
 }

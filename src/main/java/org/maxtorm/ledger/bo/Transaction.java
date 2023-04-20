@@ -17,4 +17,5 @@ public class Transaction {
     private String destinationAccountId = "";
     private Commodity destinationCommodity = Commodity.Undefined;
     private BigDecimal destinationAmount = BigDecimal.ZERO;
+    private TransactionExtraInfo transactionExtraInfo = new TransactionExtraInfo();
 }

@@ -15,6 +15,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.slf4j.helpers.MessageFormatter;
 
+@Getter
+@Setter
 public class AccountExtraInfo {
     @Converter(autoApply = true)
     public static class AccountExtraInfoConverter implements AttributeConverter<AccountExtraInfo, String> {
@@ -73,5 +75,5 @@ public class AccountExtraInfo {
     }
 
     @JsonSerialize(nullsUsing = NullObjectSerializer.class)
-    private final AccountExtraInfo_Fund fund = null;
+    private AccountExtraInfo_Fund fund = new AccountExtraInfo_Fund();
 }

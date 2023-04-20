@@ -1,7 +1,6 @@
 package org.maxtorm.ledger.bo;
 
 import org.junit.jupiter.api.Test;
-import org.maxtorm.ledger.bo.Commodity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
