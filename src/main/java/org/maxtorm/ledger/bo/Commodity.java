@@ -1,6 +1,7 @@
 package org.maxtorm.ledger.bo;
 
 import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import lombok.Getter;
 import org.slf4j.helpers.MessageFormatter;
 
@@ -39,6 +40,7 @@ public class Commodity {
         SGP
     }
 
+    @Converter(autoApply = true)
     public static class CommodityConverter implements AttributeConverter<Commodity, String> {
 
         @Override

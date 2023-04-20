@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.maxtorm.ledger.bo.Commodity;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,9 +24,8 @@ public class AccountBalancePo extends AbstractTimestampEntity {
 
     @Column(name = "commodity")
     @Convert(converter = Commodity.CommodityConverter.class)
-    private Commodity commodity;
+    private Commodity commodity = Commodity.Undefined;
 
     @Column(name = "amount")
-    private Long amount = 0L;
-
+    private BigDecimal amount = BigDecimal.ZERO;
 }

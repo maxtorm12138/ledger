@@ -2,6 +2,10 @@ package org.maxtorm.ledger.bo;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import org.maxtorm.ledger.util.NullObjectSerializer;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -9,8 +13,30 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.slf4j.helpers.MessageFormatter;
 
 public class AccountExtraInfo {
+    @Converter(autoApply = true)
+    public static class AccountExtraInfoConverter implements AttributeConverter<AccountExtraInfo, String> {
+        @Override
+        public String convertToDatabaseColumn(AccountExtraInfo accountExtraInfo) {
+            try {
+                return new ObjectMapper().writeValueAsString(accountExtraInfo);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", accountExtraInfo).getMessage());
+            }
+        }
+
+        @Override
+        public AccountExtraInfo convertToEntityAttribute(String strAccountBalanceExtraInfo) {
+            try {
+                return new ObjectMapper().readValue(strAccountBalanceExtraInfo, AccountExtraInfo.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", strAccountBalanceExtraInfo).getMessage());
+            }
+        }
+    }
+
     @Getter
     @Setter
     @NonNull

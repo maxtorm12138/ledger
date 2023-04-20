@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.maxtorm.ledger.bo.AccountExtraInfo;
 import org.maxtorm.ledger.bo.Commodity;
 
 @Getter
@@ -34,6 +35,6 @@ public class AccountPo extends AbstractTimestampEntity {
     private Commodity majorCommodity = Commodity.CurrencyCNY;
 
     @Column(name = "extra_info", nullable = false, length = 2048)
-    @Convert(converter = AccountExtraInfoPo.AccountExtraInfoConverter.class)
-    private AccountExtraInfoPo extraInfo = new AccountExtraInfoPo();
+    @Convert(converter = AccountExtraInfo.AccountExtraInfoConverter.class)
+    private AccountExtraInfo extraInfo = new AccountExtraInfo();
 }
