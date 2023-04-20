@@ -15,11 +15,7 @@ public class Account {
     private String parentAccountId = "";
     private String name = "";
     private String iconUrl = "";
-
-    @JsonSerialize(using = Commodity.CommodityJsonSerializer.class)
-    @JsonDeserialize(using = Commodity.CommodityJsonDeserializer.class)
     private Commodity majorCommodity = Commodity.Undefined;
-
     private AccountExtraInfo accountExtraInfo = new AccountExtraInfo();
-    private List<AccountBalance> accountBalanceList = List.of();
+    private List<AccountBalance> accountBalance = List.of();
 }

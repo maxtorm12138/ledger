@@ -48,25 +48,7 @@ public class AccountService {
         }
 
         var accountPoCreated = accountRepository.save(accountPo);
-
         return AccountMapper.INSTANCE.Convert(accountPoCreated);
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public AccountBalance addAccountBalance(AccountBalance balance, Long difference) {
-        var paramBalancePo = AccountBalanceMapper.INSTANCE.Convert(balance);
-        paramBalancePo.setAmount(difference);
-
-        // search for balance entity
-        var databaseBalancePo = accountBalanceRepository.getAccountBalancePoByAccountIdAndCommodity(paramBalancePo.getAccountId(), paramBalancePo.getCommodity());
-
-        AtomicReference<AccountBalancePo> updatedBalancePo = new AtomicReference<>();
-        databaseBalancePo.ifPresentOrElse(balancePo -> {
-            balancePo.setAmount(balancePo.getAmount() + difference);
-            updatedBalancePo.set(accountBalanceRepository.save(balancePo));
-        }, () -> updatedBalancePo.set(accountBalanceRepository.save(paramBalancePo)));
-
-        return AccountBalanceMapper.INSTANCE.Convert(updatedBalancePo.get());
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
@@ -81,9 +63,15 @@ public class AccountService {
         }
 
         accountInLevel.forEach(accountPo -> {
+            List<AccountBalancePo> accountBalancePo = accountBalanceRepository.findAccountBalancePosByAccountId(accountPo.getAccountId());
+
+            Account account = AccountMapper.INSTANCE.Convert(accountPo);
+            account.setAccountBalance(AccountBalanceMapper.INSTANCE.convert(accountBalancePo));
+
             AccountTree accountTree = new AccountTree();
-            accountTree.setAccount(AccountMapper.INSTANCE.Convert(accountPo));
+            accountTree.setAccount(account);
             accountTree.setChildren(tree(accountPo.getAccountId()));
+
             accountTreeList.add(accountTree);
         });
 
