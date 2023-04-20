@@ -16,4 +16,7 @@ public interface AccountBalanceRepository extends CrudRepository<AccountBalanceP
     Optional<AccountBalancePo> findAccountBalancePoByAccountIdAndCommodity(String accountId, Commodity commodity);
 
     List<AccountBalancePo> findAccountBalancePosByAccountId(String accountId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<AccountBalancePo> getAccountBalancePosByAccountId(String accountId);
 }

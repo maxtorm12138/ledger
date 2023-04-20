@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.bo.AccountBalance;
 import org.maxtorm.ledger.bo.AccountTree;
-
+import org.maxtorm.ledger.bo.Commodity;
 import org.maxtorm.ledger.dao.AccountRepository;
 import org.maxtorm.ledger.dao.AccountBalanceRepository;
 
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.math.BigDecimal;
 
 @Service
 @AllArgsConstructor
@@ -75,5 +76,53 @@ public class AccountService {
         });
 
         return accountTreeList;
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRED)
+    public List<AccountBalance> getAccountBalance(String accountId) {
+        return AccountBalanceMapper.INSTANCE.convert(accountBalanceRepository.getAccountBalancePosByAccountId(accountId));
+    }
+
+    @Transactional(value = Transactional.TxType.SUPPORTS)
+    public List<AccountBalance> findAccountBalance(String accountId) {
+        return AccountBalanceMapper.INSTANCE.convert(accountBalanceRepository.findAccountBalancePosByAccountId(accountId));
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRED)
+    public AccountBalance transfer(String accountId, Commodity commodity, BigDecimal amount) {
+        var accountPo = accountRepository.getAccountPoByAccountId(accountId).orElseThrow(() -> new IllegalArgumentException(MessageFormatter.format("No such account: {}", accountId).getMessage()));
+        var optAccountBalancePo = accountBalanceRepository.getAccountBalancePoByAccountIdAndCommodity(accountPo.getAccountId(), commodity);
+
+        AccountBalancePo accountBalancePo;
+        if (optAccountBalancePo.isPresent()) {
+            accountBalancePo = optAccountBalancePo.get();
+            accountBalancePo.setAmount(accountBalancePo.getAmount().add(amount));
+        } else {
+            accountBalancePo = new AccountBalancePo();
+            accountBalancePo.setAccountId(accountPo.getAccountId());
+            accountBalancePo.setCommodity(commodity);
+            accountBalancePo.setAmount(amount);
+        }
+        
+        accountBalancePo = accountBalanceRepository.save(accountBalancePo);
+
+        return AccountBalanceMapper.INSTANCE.convert(accountBalancePo);
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRED)
+    public List<Account> path(String superAccountId, String childAccountId) {
+        Integer nodeToSuperLeft = 4;
+
+        List<AccountPo> accountPos = new ArrayList<>(); 
+
+        AccountPo start = accountRepository.getAccountPoByAccountId(childAccountId).orElseThrow();
+        List<AccountBalancePo> accountBalancePo = accountBalanceRepository.getAccountBalancePosByAccountId(childAccountId);
+
+        AccountPo end = accountRepository.getAccountPoByAccountId(superAccountId).orElseThrow();
+        
+        while(nodeToSuperLeft > 0 && start.getAccountId() != end.getAccountId()) {
+            
+        }
+
     }
 }

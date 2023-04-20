@@ -1,5 +1,6 @@
 package org.maxtorm.ledger.mapper;
 
+import org.hibernate.mapping.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -13,4 +14,6 @@ public interface AccountMapper {
     Account Convert(AccountPo account);
 
     AccountPo Convert(Account account);
+
+    List<Account> convert(List<AccountPo> account);
 }
