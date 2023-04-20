@@ -1,15 +1,25 @@
 package org.maxtorm.ledger.bo;
 
 import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Convert;
 import lombok.Getter;
 import org.slf4j.helpers.MessageFormatter;
 
-import java.util.Objects;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Getter
+@JsonSerialize(using = Commodity.CommodityJsonSerializer.class)
+@JsonDeserialize(using = Commodity.CommodityJsonDeserializer.class)
 public class Commodity {
     public enum Category {
         Undefined,
@@ -38,23 +48,36 @@ public class Commodity {
 
         @Override
         public Commodity convertToEntityAttribute(String commodity) {
-            return new Commodity(commodity);
+            return Commodity.of(commodity);
         }
     }
 
-    private static final String commodityPattern = "(?<category>[A-Za-z0-9]+)\\.(?<name>[A-Za-z0-9]+)(?:\\.(?<market>HK|US|CN|JP|SGP))?$";
+    public static class CommodityJsonSerializer extends JsonSerializer<Commodity> {
 
+        @Override
+        public void serialize(Commodity commodity, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            gen.writeString(commodity.toString());
+        }
+    }
+
+    public static class CommodityJsonDeserializer extends JsonDeserializer<Commodity> {
+
+        @Override
+        public Commodity deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            return Commodity.of(p.getText());
+        }
+    }
 
     private Category category = Category.Undefined;
     private String name = "";
     private Market market = Market.None;
 
     public Commodity(String commodity) {
-        if (Objects.equals(commodity, Category.Undefined.name())) {
+        if (commodity.equals(Category.Undefined.name())) {
             return;
         }
 
-        var regex = Pattern.compile(commodityPattern);
+        var regex = Pattern.compile("(?<category>[A-Za-z0-9]+)\\.(?<name>[A-Za-z0-9]+)(?:\\.(?<market>HK|US|CN|JP|SGP))?$");
         var matcher = regex.matcher(commodity);
         if (!matcher.find()) {
             throw new IllegalArgumentException(MessageFormatter.format("invalid commodity {} pattern not match", commodity).getMessage());
@@ -74,18 +97,14 @@ public class Commodity {
             }
             market = Market.valueOf(strMarket);
         }
-
-        if ((market == Market.CN || market == Market.HK) && !name.matches("^[0-9]+$")) {
-            throw new IllegalArgumentException(MessageFormatter.format("invalid commodity {}, invalid name", commodity).getMessage());
-        }
     }
 
     @Override
     public String toString() {
-        if (category == Category.Security) {
+        if (category == Category.Undefined) {
+            return getCategory().name();
+        } else if (category == Category.Currency) {
             return String.join(".", getCategory().name(), getName(), getMarket().name());
-        } else if (category == Category.Undefined) {
-          return getCategory().name();
         } else {
             return String.join(".", getCategory().name(), getName());
         }
@@ -95,10 +114,10 @@ public class Commodity {
         return new Commodity(commodity);
     }
 
-    public static Commodity Undefined = Commodity.of("Undefined");
-    public static Commodity CurrencyCNY = Commodity.of("Currency.CNY");
-    public static Commodity CurrencyHKD = Commodity.of("Currency.HKD");
-    public static Commodity CurrencyUSD = Commodity.of("Currency.USD");
+    public static final Commodity Undefined = Commodity.of("Undefined");
+    public static final Commodity CurrencyCNY = Commodity.of("Currency.CNY");
+    public static final Commodity CurrencyHKD = Commodity.of("Currency.HKD");
+    public static final Commodity CurrencyUSD = Commodity.of("Currency.USD");
 }
 
 

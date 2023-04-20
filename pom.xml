@@ -107,15 +107,8 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
-
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-            </extension>
-        </extensions>
     </build>
 
 </project>
