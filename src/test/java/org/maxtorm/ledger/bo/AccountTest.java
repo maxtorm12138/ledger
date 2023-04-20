@@ -16,9 +16,11 @@ public class AccountTest {
         Account account = new Account();
         account.setMajorCommodity(Commodity.CurrencyCNY);
         account.getAccountExtraInfo().getFund().setUnrealizedGain(BigDecimal.valueOf(100));;
+        account.getAccountExtraInfo().getFund().setCommodityOfAccount(Commodity.of("Fund.004011"));
 
         String json = new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true).writeValueAsString(account);
-        assertThat(json).isEqualTo("""
+        ObjectMapper objectMapper = new ObjectMapper();
+        assertThat(objectMapper.readTree(json)).isEqualTo(objectMapper.readTree("""
             {
                 "accountId" : "",
                 "rootAccountId" : "",
@@ -28,12 +30,11 @@ public class AccountTest {
                 "majorCommodity" : "Currency.CNY",
                 "accountExtraInfo" : {
                   "fund" : {
-                    "commodityOfAccount" : "Undefined",
+                    "commodityOfAccount" : "Fund.004011",
                     "netWorth" : 0,
                     "marketValue" : 0,
                     "averageCostPrice" : 0,
                     "dilutedCostPrice" : 0,
-                    "costCommodity" : "Currency.CNY",
                     "totalBuyInAmount" : 0,
                     "totalSelloutAmount" : 0,
                     "totalHoldingCost" : 0,
@@ -42,7 +43,6 @@ public class AccountTest {
                 },
                 "accountBalance" : [ ]
               }
-                """);
-
+            """));
     }
 }

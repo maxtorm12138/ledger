@@ -58,9 +58,6 @@ public class AccountExtraInfo {
         // 摊薄成本价
         private BigDecimal dilutedCostPrice = BigDecimal.valueOf(0L);
 
-        // 计价货币
-        private Commodity costCommodity = Commodity.CurrencyCNY;
-
         // 总买入
         private BigDecimal totalBuyInAmount = BigDecimal.valueOf(0L);
 
