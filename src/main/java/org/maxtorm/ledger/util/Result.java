@@ -3,7 +3,6 @@ package org.maxtorm.ledger.util;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import org.springframework.http.converter.AbstractHttpMessageConverter;
 
 @AllArgsConstructor
 @NoArgsConstructor

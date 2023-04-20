@@ -3,7 +3,6 @@ package org.maxtorm.ledger.controller;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.api.Api;
 import org.maxtorm.ledger.service.AccountService;
-import org.maxtorm.ledger.util.ErrorCode;
 import org.maxtorm.ledger.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +19,20 @@ public class AccountController {
 
     @PostMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Result<Api.OpenAccountResponse> open(@RequestBody Api.OpenAccountRequest request) {
+        var response = new Api.OpenAccountResponse();
+
         var account = request.getAccount();
         var accountOpened = accountService.open(account);
-        var response = Api.OpenAccountResponse.builder().account(accountOpened).build();
+
+        response.setAccount(accountOpened);
         return Result.success(response);
     }
 
     @PostMapping(value = "/tree", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Result<Api.GetAccountTreeResponse> tree(@RequestBody Api.GetAccountTreeRequest request) {
         var accountTree = accountService.tree(request.getAccountId());
-        var response = Api.GetAccountTreeResponse.builder().accountTree(accountTree).build();
+        var response = new Api.GetAccountTreeResponse();
+        response.setAccountTree(accountTree);
         return Result.success(response);
     }
 }

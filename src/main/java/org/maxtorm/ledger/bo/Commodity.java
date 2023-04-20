@@ -105,7 +105,7 @@ public class Commodity {
     public String toString() {
         if (category == Category.Undefined) {
             return getCategory().name();
-        } else if (category == Category.Currency) {
+        } else if (category == Category.Security) {
             return String.join(".", getCategory().name(), getName(), getMarket().name());
         } else {
             return String.join(".", getCategory().name(), getName());
