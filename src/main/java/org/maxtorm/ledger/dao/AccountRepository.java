@@ -19,6 +19,10 @@ public interface AccountRepository extends CrudRepository<AccountPo, Integer> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<AccountPo> getAccountPoByAccountId(String accountId);
 
-    List<AccountPo> findAccountPoByRootAccountIdIs(String rootAccountId);
+    boolean existsAccountPoByName(String name);
 
+    Optional<AccountPo> findAccountPoByName(String name);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<AccountPo> getAccountPoByName(String name);
 }

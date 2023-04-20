@@ -32,7 +32,7 @@ public class AccountPo extends AbstractTimestampEntity {
 
     @Column(name = "major_commodity")
     @Convert(converter = Commodity.CommodityConverter.class)
-    private Commodity majorCommodity = Commodity.CurrencyCNY;
+    private Commodity majorCommodity = Commodity.Undefined;
 
     @Column(name = "extra_info", nullable = false, length = 2048)
     @Convert(converter = AccountExtraInfo.AccountExtraInfoConverter.class)

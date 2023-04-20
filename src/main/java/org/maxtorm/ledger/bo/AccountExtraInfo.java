@@ -42,6 +42,15 @@ public class AccountExtraInfo {
     @Getter
     @Setter
     @NonNull
+    @JsonSerialize(nullsUsing = NullObjectSerializer.class)
+    public static class AccountExtraInfo_Debit {
+        private String card_no_tail = "";
+    }
+
+    @Getter
+    @Setter
+    @NonNull
+    @JsonSerialize(nullsUsing = NullObjectSerializer.class)
     public static class AccountExtraInfo_Fund {
         // 计价货币
         private Commodity commodityOfAccount = Commodity.Undefined;
@@ -71,6 +80,6 @@ public class AccountExtraInfo {
         private BigDecimal unrealizedGain = BigDecimal.valueOf(0L);
     }
 
-    @JsonSerialize(nullsUsing = NullObjectSerializer.class)
-    private AccountExtraInfo_Fund fund = new AccountExtraInfo_Fund();
+    private AccountExtraInfo_Fund fund = null;
+    private AccountExtraInfo_Debit debit = null;
 }

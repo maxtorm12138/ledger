@@ -27,12 +27,4 @@ public class AccountController {
         response.setAccount(accountOpened);
         return Result.success(response);
     }
-
-    @PostMapping(value = "/tree", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Result<Api.GetAccountTreeResponse> tree(@RequestBody Api.GetAccountTreeRequest request) {
-        var accountTree = accountService.tree(request.getAccountId());
-        var response = new Api.GetAccountTreeResponse();
-        response.setAccountTree(accountTree);
-        return Result.success(response);
-    }
 }

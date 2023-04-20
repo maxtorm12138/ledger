@@ -8,23 +8,28 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString(callSuper = true)
+@IdClass(AccountBalancePoId.class)
 @Entity(name = "account_balance")
-@Table(name = "account_balance", indexes = {@Index(name = "unique_account_id_commodity", columnList = "account_id, commodity")})
+@Table(name = "account_balance")
 public class AccountBalancePo extends AbstractTimestampEntity {
     @Id
-    @Column(name = "account_summary_id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String accountSummaryId = "";
-
     @Column(name = "account_id")
     private String accountId = "";
 
+
+    @Id
     @Column(name = "commodity")
     @Convert(converter = Commodity.CommodityConverter.class)
-    private Commodity commodity = Commodity.Undefined;
+    private String commodity = Commodity.Undefined.toString();
+
+    public Commodity getCommodity() {
+        return Commodity.of(commodity);
+    }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity.toString();
+    }
 
     @Column(name = "amount")
     private BigDecimal amount = BigDecimal.ZERO;

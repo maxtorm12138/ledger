@@ -2,30 +2,25 @@ package org.maxtorm.ledger.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-
 import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.bo.AccountBalance;
 import org.maxtorm.ledger.bo.AccountTree;
 import org.maxtorm.ledger.bo.Commodity;
-import org.maxtorm.ledger.dao.AccountRepository;
 import org.maxtorm.ledger.dao.AccountBalanceRepository;
-
+import org.maxtorm.ledger.dao.AccountRepository;
 import org.maxtorm.ledger.mapper.AccountBalanceMapper;
 import org.maxtorm.ledger.mapper.AccountMapper;
-
 import org.maxtorm.ledger.po.AccountBalancePo;
 import org.maxtorm.ledger.po.AccountPo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
-
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -35,94 +30,74 @@ public class AccountService {
     private AccountRepository accountRepository;
     private AccountBalanceRepository accountBalanceRepository;
 
+    @EventListener(ApplicationReadyEvent.class)
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Account open(Account account) {
-        var accountPo = AccountMapper.INSTANCE.Convert(account);
-
-        if (!accountPo.getParentAccountId().isEmpty()) {
-            accountRepository.getAccountPoByAccountId(accountPo.getParentAccountId()).orElseThrow( () -> new IllegalArgumentException(MessageFormatter.format("parentAccount: {} not exists", accountPo.getParentAccountId()).getMessage()));
+    public void onApplicationReady() {
+        if (accountRepository.existsAccountPoByName("system_root")) {
+            logger.info("Ledger is initialized");
+            return;
         }
 
-        if (!accountPo.getRootAccountId().isEmpty()) {
-            accountRepository.getAccountPoByAccountId(account.getRootAccountId()).orElseThrow(() -> new IllegalArgumentException(MessageFormatter.format("rootAccount: {} not exists", accountPo.getRootAccountId()).getMessage()));
+        // system root account, balances should always be zero
+        AccountPo system_root = new AccountPo();
+        system_root.setName("system_root");
+        system_root = accountRepository.save(system_root);
+
+        // initialize root account
+        AccountPo user_root = new AccountPo();
+        user_root.setName("user_root");
+        user_root.setParentAccountId(system_root.getAccountId());
+        user_root.setRootAccountId(system_root.getAccountId());
+        accountRepository.save(user_root);
+
+        // initialize equity account
+        AccountPo equity = new AccountPo();
+        equity.setName("equity");
+        equity.setParentAccountId(system_root.getAccountId());
+        equity.setRootAccountId(system_root.getAccountId());
+        accountRepository.save(equity);
+
+        logger.info("Ledger is initialized");
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRED)
+    public Account open(Account account) {
+        var accountPo = AccountMapper.INSTANCE.convert(account);
+
+        if (!accountPo.getParentAccountId().isEmpty()) {
+            accountRepository.getAccountPoByAccountId(accountPo.getParentAccountId()).orElseThrow();
+        } else {
+            var userRootAccountPo = accountRepository.getAccountPoByName("user_root").orElseThrow();
+            accountPo.setParentAccountId(userRootAccountPo.getAccountId());
         }
 
         var accountPoCreated = accountRepository.save(accountPo);
-        return AccountMapper.INSTANCE.Convert(accountPoCreated);
+        return AccountMapper.INSTANCE.convert(accountPoCreated);
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public List<AccountTree> tree(String accountId) {
-        var accountTreeList = new ArrayList<AccountTree>();
+    public void transfer(String accountId, Commodity commodity, BigDecimal amount) {
+        // find user_root
+        var userRootAccountPo = accountRepository.getAccountPoByName("user_root").orElseThrow();
 
-        List<AccountPo> accountInLevel;
-        if (accountId.isEmpty()) {
-            accountInLevel = accountRepository.findAccountPoByRootAccountIdIs("");
-        } else {
-            accountInLevel = accountRepository.findAccountPoByParentAccountId(accountId);
+        var start = new AccountPo();
+        start.setParentAccountId(accountId);
+
+        List<String> path = new ArrayList<>();
+        int maxNodePermit = 4;
+
+        while (maxNodePermit > 0 && !start.getAccountId().equals(userRootAccountPo.getAccountId())) {
+            start = accountRepository.findAccountPoByAccountId(start.getParentAccountId()).orElseThrow();
+            path.add(start.getAccountId());
+            maxNodePermit--;
         }
 
-        accountInLevel.forEach(accountPo -> {
-            List<AccountBalancePo> accountBalancePo = accountBalanceRepository.findAccountBalancePosByAccountId(accountPo.getAccountId());
+        if (maxNodePermit < 0) {
+            throw new IllegalArgumentException("max depth account");
+        }
 
-            Account account = AccountMapper.INSTANCE.Convert(accountPo);
-            account.setAccountBalance(AccountBalanceMapper.INSTANCE.convert(accountBalancePo));
-
-            AccountTree accountTree = new AccountTree();
-            accountTree.setAccount(account);
-            accountTree.setChildren(tree(accountPo.getAccountId()));
-
-            accountTreeList.add(accountTree);
+        path.forEach(pathAccountId -> {
+            accountBalanceRepository.upsertAccountBalancePoBalance(pathAccountId, commodity.toString(), amount);
         });
-
-        return accountTreeList;
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public List<AccountBalance> getAccountBalance(String accountId) {
-        return AccountBalanceMapper.INSTANCE.convert(accountBalanceRepository.getAccountBalancePosByAccountId(accountId));
-    }
-
-    @Transactional(value = Transactional.TxType.SUPPORTS)
-    public List<AccountBalance> findAccountBalance(String accountId) {
-        return AccountBalanceMapper.INSTANCE.convert(accountBalanceRepository.findAccountBalancePosByAccountId(accountId));
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public AccountBalance transfer(String accountId, Commodity commodity, BigDecimal amount) {
-        var accountPo = accountRepository.getAccountPoByAccountId(accountId).orElseThrow(() -> new IllegalArgumentException(MessageFormatter.format("No such account: {}", accountId).getMessage()));
-        var optAccountBalancePo = accountBalanceRepository.getAccountBalancePoByAccountIdAndCommodity(accountPo.getAccountId(), commodity);
-
-        AccountBalancePo accountBalancePo;
-        if (optAccountBalancePo.isPresent()) {
-            accountBalancePo = optAccountBalancePo.get();
-            accountBalancePo.setAmount(accountBalancePo.getAmount().add(amount));
-        } else {
-            accountBalancePo = new AccountBalancePo();
-            accountBalancePo.setAccountId(accountPo.getAccountId());
-            accountBalancePo.setCommodity(commodity);
-            accountBalancePo.setAmount(amount);
-        }
-        
-        accountBalancePo = accountBalanceRepository.save(accountBalancePo);
-
-        return AccountBalanceMapper.INSTANCE.convert(accountBalancePo);
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public List<Account> path(String superAccountId, String childAccountId) {
-        Integer nodeToSuperLeft = 4;
-
-        List<AccountPo> accountPos = new ArrayList<>(); 
-
-        AccountPo start = accountRepository.getAccountPoByAccountId(childAccountId).orElseThrow();
-        List<AccountBalancePo> accountBalancePo = accountBalanceRepository.getAccountBalancePosByAccountId(childAccountId);
-
-        AccountPo end = accountRepository.getAccountPoByAccountId(superAccountId).orElseThrow();
-        
-        while(nodeToSuperLeft > 0 && start.getAccountId() != end.getAccountId()) {
-            
-        }
-
     }
 }
