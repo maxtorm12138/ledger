@@ -19,12 +19,17 @@ public class AccountController {
 
     @PostMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Result<Api.OpenAccountResponse> open(@RequestBody Api.OpenAccountRequest request) {
+        var account = request.getAccount();
+        if (account.getIconUrl().isEmpty()) {
+            throw new IllegalArgumentException("empy");
+        }
+
         var response = new Api.OpenAccountResponse();
 
-        var account = request.getAccount();
         var accountOpened = accountService.open(account);
 
         response.setAccount(accountOpened);
         return Result.success(response);
     }
+
 }

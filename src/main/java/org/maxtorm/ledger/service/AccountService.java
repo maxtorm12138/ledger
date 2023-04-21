@@ -17,6 +17,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import com.google.protobuf.Option;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -60,22 +62,21 @@ public class AccountService {
         logger.info("Ledger is initialized");
     }
 
+    public Optional<Account> findAccountByAccountId(String accountId) {
+        return accountRepository.findAccountPoByAccountId(accountId).map(accountPo -> AccountMapper.INSTANCE.convert(accountPo)).or(()->Optional.empty());
+    }
+
+    public Optional<Account> findAccountWithBalanceByAccountId(String accountId) {
+        var accountPo = accountRepository.findAccountPoByAccountId(accountId);
+        var accountBalancePoList = accountBalanceRepository.findAccountBalancePosByAccountId(accountId);
+    }
+
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Account open(Account account) {
         var accountPo = AccountMapper.INSTANCE.convert(account);
-        var accountBalancePos = AccountBalanceMapper.INSTANCE.convertBosToPos(account.getAccountBalance());
-
-        accountRepository.getAccountPoByAccountId(accountPo.getParentAccountId()).orElseThrow();
         accountPo.setAccountId(UUID.randomUUID().toString());
-
-        var accountPoCreated = accountRepository.save(accountPo);
-
-        for (var accountBalancePo : accountBalancePos) {
-            accountBalancePo.setAccountId(accountPoCreated.getAccountId());
-        }
-
-
-        return AccountMapper.INSTANCE.convert(accountPoCreated);
+        accountPo = accountRepository.save(accountPo);
+        return AccountMapper.INSTANCE.convert(accountPo);
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
