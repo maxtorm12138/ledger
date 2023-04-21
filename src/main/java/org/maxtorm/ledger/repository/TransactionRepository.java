@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.dao;
+package org.maxtorm.ledger.repository;
 
 import org.maxtorm.ledger.po.TransactionPo;
 import org.springframework.data.repository.CrudRepository;

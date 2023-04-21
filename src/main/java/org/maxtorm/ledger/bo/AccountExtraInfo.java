@@ -5,13 +5,12 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import org.maxtorm.ledger.util.NullObjectSerializer;
+import lombok.ToString;
+import org.maxtorm.ledger.util.LedgerDecimal;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,7 +27,7 @@ public class AccountExtraInfo {
             try {
                 return new ObjectMapper().setSerializationInclusion(Include.NON_NULL).writeValueAsString(accountExtraInfo);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", accountExtraInfo).getMessage());
+                throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", e).getMessage());
             }
         }
 
@@ -37,8 +36,17 @@ public class AccountExtraInfo {
             try {
                 return new ObjectMapper().readValue(strAccountBalanceExtraInfo, AccountExtraInfo.class);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", strAccountBalanceExtraInfo).getMessage());
+                throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", e).getMessage());
             }
+        }
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return new ObjectMapper().setSerializationInclusion(Include.NON_NULL).writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", e.getMessage()).getMessage());
         }
     }
 
@@ -71,28 +79,28 @@ public class AccountExtraInfo {
         private Commodity commodityOfAccount = Commodity.Undefined;
 
         // 基金净值
-        private BigDecimal netWorth = BigDecimal.valueOf(0L);
+        private BigDecimal netWorth = LedgerDecimal.ZERO;
 
         // 市值
-        private BigDecimal marketValue = BigDecimal.valueOf(0L);
+        private BigDecimal marketValue = LedgerDecimal.ZERO;
 
         // 平均成本价
-        private BigDecimal averageCostPrice = BigDecimal.valueOf(0L);
+        private BigDecimal averageCostPrice = LedgerDecimal.ZERO;
 
         // 摊薄成本价
-        private BigDecimal dilutedCostPrice = BigDecimal.valueOf(0L);
+        private BigDecimal dilutedCostPrice = LedgerDecimal.ZERO;
 
         // 总买入
-        private BigDecimal totalBuyInAmount = BigDecimal.valueOf(0L);
+        private BigDecimal totalBuyInAmount = LedgerDecimal.ZERO;
 
         // 总卖出
-        private BigDecimal totalSelloutAmount = BigDecimal.valueOf(0L);
+        private BigDecimal totalSelloutAmount = LedgerDecimal.ZERO;
 
         // 持仓总成本
-        private BigDecimal totalHoldingCost = BigDecimal.valueOf(0L);
+        private BigDecimal totalHoldingCost = LedgerDecimal.ZERO;
 
         // 未实现收益 = 市值 - 持仓总成本
-        private BigDecimal unrealizedGain = BigDecimal.valueOf(0L);
+        private BigDecimal unrealizedGain = LedgerDecimal.ZERO;
     }
 
     private AccountExtraInfo_Fund fund = null;

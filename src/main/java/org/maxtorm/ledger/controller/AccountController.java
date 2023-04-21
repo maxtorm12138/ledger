@@ -1,5 +1,6 @@
 package org.maxtorm.ledger.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.api.Api;
 import org.maxtorm.ledger.service.AccountService;
@@ -18,17 +19,17 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Result<Api.OpenAccountResponse> open(@RequestBody Api.OpenAccountRequest request) {
+    public @ResponseBody Result<Api.OpenAccountResponse> open(@Valid @RequestBody Api.OpenAccountRequest request) {
         var account = request.getAccount();
-        if (account.getIconUrl().isEmpty()) {
-            throw new IllegalArgumentException("empy");
+        if (account.getParentAccountId().isEmpty()) {
+            account.setParentAccountId("user_root");
         }
 
         var response = new Api.OpenAccountResponse();
 
-        var accountOpened = accountService.open(account);
+        account = accountService.open(account);
 
-        response.setAccount(accountOpened);
+        response.setAccount(account);
         return Result.success(response);
     }
 

@@ -3,6 +3,7 @@ package org.maxtorm.ledger.po;
 import jakarta.persistence.*;
 import lombok.*;
 import org.maxtorm.ledger.bo.Commodity;
+import org.maxtorm.ledger.util.LedgerDecimal;
 
 import java.math.BigDecimal;
 
@@ -30,6 +31,6 @@ public class AccountBalancePo extends AbstractTimestampEntity {
         this.commodity = commodity.toString();
     }
 
-    @Column(name = "book_balance", columnDefinition = "DECIMAL(32,5)")
-    private BigDecimal bookBalance = BigDecimal.ZERO;
+    @Column(name = "book_balance", precision = 34, scale = 5)
+    private BigDecimal bookBalance = LedgerDecimal.ZERO;
 }

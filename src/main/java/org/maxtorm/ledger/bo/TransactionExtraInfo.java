@@ -1,8 +1,10 @@
 package org.maxtorm.ledger.bo;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.ToString;
 import org.slf4j.helpers.MessageFormatter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,15 +15,16 @@ import jakarta.persistence.Converter;
 
 @Getter
 @Setter
+@ToString
 public class TransactionExtraInfo {
     @Converter(autoApply = true)
     public static class TransactionExtraInfoConverter implements AttributeConverter<TransactionExtraInfo, String> {
       @Override
       public String convertToDatabaseColumn(TransactionExtraInfo transactionExtraInfo) {
           try {
-              return new ObjectMapper().writeValueAsString(transactionExtraInfo);
+              return new ObjectMapper().configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).writeValueAsString(transactionExtraInfo);
           } catch (JsonProcessingException e) {
-              throw new RuntimeException(MessageFormatter.format("Error converting TransactionExtraInfo: {}", transactionExtraInfo).getMessage());
+              throw new RuntimeException(MessageFormatter.format("Error converting TransactionExtraInfo: {}", e.getMessage()).getMessage());
           }
       }
 
@@ -30,7 +33,7 @@ public class TransactionExtraInfo {
           try {
               return new ObjectMapper().readValue(strTransactionExtraInfo, TransactionExtraInfo.class);
           } catch (JsonProcessingException e) {
-              throw new RuntimeException(MessageFormatter.format("Error converting TransactionExtraInfo: {}", strTransactionExtraInfo).getMessage());
+              throw new RuntimeException(MessageFormatter.format("Error converting TransactionExtraInfo: {}", e.getMessage()).getMessage());
           }
       }
     }

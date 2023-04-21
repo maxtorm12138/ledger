@@ -1,5 +1,7 @@
 package org.maxtorm.ledger.api;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.maxtorm.ledger.bo.Account;
@@ -11,19 +13,22 @@ public class Api {
     @Getter
     @Setter
     public static class OpenAccountRequest {
-        Account account = new Account();
+        @NotNull
+        Account account;
     }
 
     @Getter
     @Setter
     public static class OpenAccountResponse {
-        Account account = new Account();
+        @NotNull
+        Account account;
     }
 
     @Getter
     @Setter
     public static class GetAccountTreeRequest {
-        String accountId = "";
+        @NotBlank
+        String accountId;
     }
 
     @Getter

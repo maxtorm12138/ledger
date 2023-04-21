@@ -1,18 +1,19 @@
-package org.maxtorm.ledger.dao;
+package org.maxtorm.ledger.repository;
 
 import jakarta.persistence.LockModeType;
 import org.maxtorm.ledger.po.AccountBalancePo;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 public interface AccountBalanceRepository extends CrudRepository<AccountBalancePo, String> {
 
     List<AccountBalancePo> findAccountBalancePosByAccountId(String accountId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    List<AccountBalancePo> getAccountBalancePosByAccountId(String accountId);
+    @Query("select a from account_balance a where a.accountId = ?1")
+    List<AccountBalancePo> listAccountBalancePos(String accountId);
+
 }
