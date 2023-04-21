@@ -11,15 +11,11 @@ import org.maxtorm.ledger.bo.Commodity;
 @Setter
 @ToString(callSuper = true)
 @Entity(name = "account")
-@Table(name = "account", indexes = {@Index(name = "index_root_account_id", columnList = "root_account_id"), @Index(name = "parent_account_id", columnList = "parent_account_id"), @Index(name = "unique_name", columnList = "name", unique = true)})
+@Table(name = "account", indexes = {@Index(name = "parent_account_id", columnList = "parent_account_id"), @Index(name = "unique_name", columnList = "name", unique = true)})
 public class AccountPo extends AbstractTimestampEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "account_id", nullable = false)
     private String accountId = "";
-
-    @Column(name = "root_account_id", nullable = false)
-    private String rootAccountId = "";
 
     @Column(name = "parent_account_id", nullable = false)
     private String parentAccountId = "";

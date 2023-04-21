@@ -8,7 +8,6 @@ import java.util.List;
 @Setter
 public class Account {
     private String accountId = "";
-    private String rootAccountId = "";
     private String parentAccountId = "";
     private String name = "";
     private String iconUrl = "";

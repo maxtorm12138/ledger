@@ -20,7 +20,6 @@ public class AccountBalancePo extends AbstractTimestampEntity {
 
     @Id
     @Column(name = "commodity")
-    @Convert(converter = Commodity.CommodityConverter.class)
     private String commodity = Commodity.Undefined.toString();
 
     public Commodity getCommodity() {
@@ -31,6 +30,6 @@ public class AccountBalancePo extends AbstractTimestampEntity {
         this.commodity = commodity.toString();
     }
 
-    @Column(name = "amount", columnDefinition = "DECIMAL(32,5)")
-    private BigDecimal amount = BigDecimal.ZERO;
+    @Column(name = "book_balance", columnDefinition = "DECIMAL(32,5)")
+    private BigDecimal bookBalance = BigDecimal.ZERO;
 }

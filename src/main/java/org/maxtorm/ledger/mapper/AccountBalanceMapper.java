@@ -16,5 +16,7 @@ public interface AccountBalanceMapper {
 
     AccountBalancePo convert(AccountBalance balance);
 
-    List<AccountBalance> convert(List<AccountBalancePo> balance);
+    List<AccountBalance> convertPosToBos(List<AccountBalancePo> balance);
+
+    List<AccountBalancePo> convertBosToPos(List<AccountBalance> balance);
 }
