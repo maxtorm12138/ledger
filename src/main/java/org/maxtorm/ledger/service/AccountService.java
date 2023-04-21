@@ -3,19 +3,15 @@ package org.maxtorm.ledger.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.bo.Account;
-import org.maxtorm.ledger.bo.AccountBalance;
-import org.maxtorm.ledger.bo.AccountTree;
 import org.maxtorm.ledger.bo.Commodity;
 import org.maxtorm.ledger.dao.AccountBalanceInsertRepository;
 import org.maxtorm.ledger.dao.AccountBalanceRepository;
 import org.maxtorm.ledger.dao.AccountRepository;
-import org.maxtorm.ledger.mapper.AccountBalanceMapper;
 import org.maxtorm.ledger.mapper.AccountMapper;
 import org.maxtorm.ledger.po.AccountBalancePo;
 import org.maxtorm.ledger.po.AccountPo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.MessageFormatter;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -34,7 +30,7 @@ public class AccountService {
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public void onApplicationReady() {
+    public void initialize() {
         if (accountRepository.existsAccountPoByName("system_root")) {
             logger.info("Ledger is initialized");
             return;

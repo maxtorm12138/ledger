@@ -2,8 +2,11 @@ package org.maxtorm.ledger.bo;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import org.maxtorm.ledger.util.NullObjectSerializer;
@@ -23,7 +26,7 @@ public class AccountExtraInfo {
         @Override
         public String convertToDatabaseColumn(AccountExtraInfo accountExtraInfo) {
             try {
-                return new ObjectMapper().writeValueAsString(accountExtraInfo);
+                return new ObjectMapper().setSerializationInclusion(Include.NON_NULL).writeValueAsString(accountExtraInfo);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", accountExtraInfo).getMessage());
             }
@@ -42,7 +45,6 @@ public class AccountExtraInfo {
     @Getter
     @Setter
     @NonNull
-    @JsonSerialize(nullsUsing = NullObjectSerializer.class)
     public static class AccountExtraInfo_Debit {
         private String card_no_tail = "";
     }
@@ -50,7 +52,20 @@ public class AccountExtraInfo {
     @Getter
     @Setter
     @NonNull
-    @JsonSerialize(nullsUsing = NullObjectSerializer.class)
+    public static class AccountExtraInfo_Credit {
+        private String card_no_tail = "";
+    }
+
+    @Getter
+    @Setter
+    @NonNull
+    public static class AccountExtraInfo_Security {
+
+    }
+
+    @Getter
+    @Setter
+    @NonNull
     public static class AccountExtraInfo_Fund {
         // 计价货币
         private Commodity commodityOfAccount = Commodity.Undefined;
