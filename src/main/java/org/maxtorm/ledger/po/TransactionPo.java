@@ -27,7 +27,7 @@ public class TransactionPo extends AbstractTimestampEntity {
     @Convert(converter = Commodity.CommodityConverter.class)
     private Commodity sourceCommodity = Commodity.Undefined;
 
-    @Column(name = "source_commodity_amount", nullable = false)
+    @Column(name = "source_commodity_amount", columnDefinition = "DECIMAL(32,5)", nullable = false)
     private BigDecimal sourceCommodityAmount = BigDecimal.ZERO;
 
     @Column(name = "destination_account_id", nullable = false)
@@ -37,7 +37,7 @@ public class TransactionPo extends AbstractTimestampEntity {
     @Convert(converter = Commodity.CommodityConverter.class)
     private Commodity destinationCommodity = Commodity.Undefined;
 
-    @Column(name = "destination_commodity_amount", nullable = false)
+    @Column(name = "destination_commodity_amount", columnDefinition = "DECIMAL(32,5)", nullable = false)
     private BigDecimal destinationCommodityAmount = BigDecimal.ZERO;
 
     @Column(name = "transaction_extra_info", nullable = false, length = 2048)

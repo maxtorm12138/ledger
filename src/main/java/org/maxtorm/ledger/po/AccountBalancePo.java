@@ -31,6 +31,6 @@ public class AccountBalancePo extends AbstractTimestampEntity {
         this.commodity = commodity.toString();
     }
 
-    @Column(name = "amount")
+    @Column(name = "amount", columnDefinition = "DECIMAL(32,5)")
     private BigDecimal amount = BigDecimal.ZERO;
 }

@@ -65,7 +65,6 @@ public class AccountService {
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Account open(Account account) {
         var accountPo = AccountMapper.INSTANCE.convert(account);
-
         if (!accountPo.getParentAccountId().isEmpty()) {
             accountRepository.getAccountPoByAccountId(accountPo.getParentAccountId()).orElseThrow();
         } else {
