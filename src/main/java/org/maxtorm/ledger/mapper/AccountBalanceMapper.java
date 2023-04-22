@@ -2,7 +2,6 @@ package org.maxtorm.ledger.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-
 import org.maxtorm.ledger.bo.AccountBalance;
 import org.maxtorm.ledger.po.AccountBalancePo;
 

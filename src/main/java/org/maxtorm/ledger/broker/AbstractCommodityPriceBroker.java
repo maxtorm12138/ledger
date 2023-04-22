@@ -3,6 +3,8 @@ package org.maxtorm.ledger.broker;
 import java.util.List;
 
 public abstract class AbstractCommodityPriceBroker {
+    public abstract List<SupportCommodity> getSupportCommodities();
+
     public enum SupportCommodity {
         Fund,
         Stock,
@@ -11,6 +13,4 @@ public abstract class AbstractCommodityPriceBroker {
         ForeignExchange,
         Option
     }
-
-    public abstract List<SupportCommodity> getSupportCommodities();
 }

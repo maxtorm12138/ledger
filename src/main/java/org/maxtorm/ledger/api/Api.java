@@ -7,8 +7,6 @@ import lombok.Setter;
 import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.bo.AccountTree;
 
-import java.util.List;
-
 public class Api {
     @Getter
     @Setter
@@ -34,6 +32,6 @@ public class Api {
     @Getter
     @Setter
     public static class GetAccountTreeResponse {
-        List<AccountTree> accountTree = List.of();
+        AccountTree accountTree;
     }
 }

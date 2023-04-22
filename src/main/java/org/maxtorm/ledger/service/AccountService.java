@@ -3,14 +3,14 @@ package org.maxtorm.ledger.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.bo.Account;
+import org.maxtorm.ledger.bo.AccountTree;
 import org.maxtorm.ledger.bo.Commodity;
-import org.maxtorm.ledger.po.AccountBalancePo;
-import org.maxtorm.ledger.repository.AccountBalanceInsertRepository;
-import org.maxtorm.ledger.repository.AccountBalanceRepository;
-import org.maxtorm.ledger.repository.AccountRepository;
 import org.maxtorm.ledger.mapper.AccountBalanceMapper;
 import org.maxtorm.ledger.mapper.AccountMapper;
+import org.maxtorm.ledger.po.AccountBalancePo;
 import org.maxtorm.ledger.po.AccountPo;
+import org.maxtorm.ledger.repository.AccountBalanceRepository;
+import org.maxtorm.ledger.repository.AccountRepository;
 import org.maxtorm.ledger.repository.EntityInsertRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,6 @@ public class AccountService {
 
     private AccountRepository accountRepository;
     private AccountBalanceRepository accountBalanceRepository;
-    private AccountBalanceInsertRepository accountBalanceInsertRepository;
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional(value = Transactional.TxType.REQUIRED)
@@ -95,20 +94,50 @@ public class AccountService {
 
         var account = AccountMapper.INSTANCE.convert(accountPo.get());
 
-        var accountBalancePoList = accountBalanceRepository.listAccountBalancePos(account.getAccountId());
+        var accountBalancePoList = accountBalanceRepository.getAccountBalancePos(account.getAccountId());
         account.setAccountBalance(AccountBalanceMapper.INSTANCE.convertPosToBos(accountBalancePoList));
 
         return Optional.of(account);
+    }
+
+    @Transactional(value = Transactional.TxType.SUPPORTS)
+    public List<Account> findAccountWithBalanceByParentAccountId(String parentAccountId) {
+        var accountPoList = accountRepository.findAccountPosByParentAccountId(parentAccountId);
+        if (accountPoList.isEmpty()) {
+            return List.of();
+        }
+
+        var accountList = AccountMapper.INSTANCE.convertPosToBos(accountPoList);
+        accountList.forEach(account -> {
+            var accountBalancePoList = accountBalanceRepository.findAccountBalancePos(account.getAccountId());
+            account.setAccountBalance(AccountBalanceMapper.INSTANCE.convertPosToBos(accountBalancePoList));
+        });
+
+        return accountList;
+    }
+
+    public List<AccountTree> tree(String parentAccountId) {
+        List<AccountTree> accountTreeList = new ArrayList<>();
+
+        List<Account> accountList = findAccountWithBalanceByParentAccountId(parentAccountId);
+        accountList.forEach(account -> {
+            AccountTree accountTree = new AccountTree();
+            accountTree.setName(account.getName());
+            accountTree.setAccount(account);
+            accountTree.setChildren(tree(account.getAccountId()));
+            accountTreeList.add(accountTree);
+        });
+
+        return accountTreeList;
     }
 
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Account open(Account account) {
         var accountPo = AccountMapper.INSTANCE.convert(account);
-        accountPo.setAccountId(UUID.randomUUID().toString());
-        if (accountPo.getParentAccountId().isEmpty()) {
-            accountPo.setParentAccountId("user_root");
-        }
+        String accountId = UUID.randomUUID().toString();
+
+        accountPo.setAccountId(accountId);
 
         entityInsertRepository.insertAccount(accountPo);
 
@@ -119,8 +148,6 @@ public class AccountService {
             accountBalancePo.setBookBalance(BigDecimal.ZERO);
             entityInsertRepository.insertAccountBalance(accountBalancePo);
         }
-
-
 
         return AccountMapper.INSTANCE.convert(accountPo);
     }
@@ -152,9 +179,4 @@ public class AccountService {
         return AccountMapper.INSTANCE.convertPosToBos(accountPoList);
     }
 
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public void addBalance(Account account, Commodity commodity, BigDecimal amountToAdd) {
-        var accountPoList = pathImpl(account.getAccountId(), "user_root");
-        accountPoList.forEach(accountPo -> accountBalanceInsertRepository.addBalance(accountPo.getAccountId(), commodity, amountToAdd));
-    }
 }

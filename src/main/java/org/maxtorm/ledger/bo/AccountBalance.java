@@ -2,6 +2,7 @@ package org.maxtorm.ledger.bo;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.maxtorm.ledger.util.LedgerDecimal;
 
 import java.math.BigDecimal;
 
@@ -9,5 +10,7 @@ import java.math.BigDecimal;
 @Setter
 public class AccountBalance {
     private Commodity commodity = Commodity.Undefined;
-    private BigDecimal bookBalance = BigDecimal.valueOf(0);
+    private BigDecimal bookBalance = LedgerDecimal.ZERO;
+    private BigDecimal totalInflow = LedgerDecimal.ZERO;
+    private BigDecimal totalOutflow = LedgerDecimal.ZERO;
 }

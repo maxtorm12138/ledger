@@ -13,12 +13,12 @@ import java.time.format.DateTimeFormatter;
 
 @Repository
 public class EntityInsertRepository {
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private String getCreateAndUpdateTime() {
         return ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Transactional
     public void insertAccount(AccountPo accountPo) {
@@ -28,6 +28,7 @@ public class EntityInsertRepository {
                             account_id,
                             parent_account_id,
                             name,
+                            category,
                             icon_id,
                             extra_info,
                             major_commodity,
@@ -37,6 +38,7 @@ public class EntityInsertRepository {
                             :account_id,
                             :parent_account_id,
                             :name,
+                            :category,
                             :icon_id,
                             :extra_info,
                             :major_commodity,
@@ -46,6 +48,7 @@ public class EntityInsertRepository {
                 .setParameter("account_id", accountPo.getAccountId())
                 .setParameter("parent_account_id", accountPo.getParentAccountId())
                 .setParameter("name", accountPo.getName())
+                .setParameter("category", accountPo.getCategory())
                 .setParameter("icon_id", accountPo.getIconId())
                 .setParameter("extra_info", accountPo.getExtraInfo().toString())
                 .setParameter("major_commodity", accountPo.getMajorCommodity().toString())
@@ -60,21 +63,27 @@ public class EntityInsertRepository {
     public void insertAccountBalance(AccountBalancePo accountBalancePo) {
         var createAndUpdateTime = getCreateAndUpdateTime();
         entityManager.createNativeQuery("""
-                insert into account_balance(
-                    account_id,
-                    commodity,
-                    book_balance,
-                    create_time,
-                    update_time)
-                values (
-                    :account_id,
-                    :commodity,
-                    :book_balance,
-                    :create_time,
-                    :update_time)""")
+                        insert into account_balance(
+                            account_id,
+                            commodity,
+                            book_balance,
+                            total_inflow,
+                            total_outflow,
+                            create_time,
+                            update_time)
+                        values (
+                            :account_id,
+                            :commodity,
+                            :book_balance,
+                            :total_inflow,
+                            :total_outflow,
+                            :create_time,
+                            :update_time)""")
                 .setParameter("account_id", accountBalancePo.getAccountId())
                 .setParameter("commodity", accountBalancePo.getCommodity().toString())
                 .setParameter("book_balance", accountBalancePo.getBookBalance())
+                .setParameter("total_inflow", accountBalancePo.getTotalInflow())
+                .setParameter("total_outflow", accountBalancePo.getTotalOutflow())
                 .setParameter("create_time", createAndUpdateTime)
                 .setParameter("update_time", createAndUpdateTime)
                 .executeUpdate();

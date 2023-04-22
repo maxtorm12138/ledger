@@ -27,9 +27,12 @@ public class AccountPo extends AbstractTimestampEntity {
     @Column(name = "icon_id", nullable = false)
     private String iconId = "";
 
-    @Column(name = "major_commodity")
+    @Column(name = "major_commodity", nullable = false)
     @Convert(converter = Commodity.CommodityConverter.class)
     private Commodity majorCommodity = Commodity.Undefined;
+
+    @Column(name = "category", nullable = false)
+    private String category = "";
 
     @Column(name = "extra_info", nullable = false, length = 2048)
     @Convert(converter = AccountExtraInfo.AccountExtraInfoConverter.class)

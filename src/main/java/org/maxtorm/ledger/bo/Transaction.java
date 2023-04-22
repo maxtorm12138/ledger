@@ -12,6 +12,19 @@ import java.math.BigDecimal;
 @Setter
 @NonNull
 public class Transaction {
+    @NotBlank
+    private String referenceNumber = "";
+    @NotBlank
+    private String sourceAccountId = "";
+    private Commodity sourceCommodity = Commodity.Undefined;
+    private BigDecimal sourceCommodityAmount = LedgerDecimal.ZERO;
+    @NotBlank
+    private String destinationAccountId = "";
+    private Commodity destinationCommodity = Commodity.Undefined;
+    private BigDecimal destinationCommodityAmount = LedgerDecimal.ZERO;
+    private ExtraInfoTag extraInfoTag = ExtraInfoTag.Undefined;
+    private TransactionExtraInfo transactionExtraInfo = new TransactionExtraInfo();
+    private TransactionState transactionState = TransactionState.Undefined;
     public enum ExtraInfoTag {
         Undefined,
         Transfer,
@@ -24,22 +37,4 @@ public class Transaction {
         Confirmed,
         Canceled
     }
-
-    @NotBlank
-    private String referenceNumber = "";
-
-    @NotBlank
-    private String sourceAccountId = "";
-    private Commodity sourceCommodity = Commodity.Undefined;
-    private BigDecimal sourceCommodityAmount = LedgerDecimal.ZERO;
-
-    @NotBlank
-    private String destinationAccountId = "";
-    private Commodity destinationCommodity = Commodity.Undefined;
-    private BigDecimal destinationCommodityAmount = LedgerDecimal.ZERO;
-
-    private ExtraInfoTag extraInfoTag = ExtraInfoTag.Undefined;
-    private TransactionExtraInfo transactionExtraInfo = new TransactionExtraInfo();
-
-    private TransactionState transactionState = TransactionState.Undefined;
 }

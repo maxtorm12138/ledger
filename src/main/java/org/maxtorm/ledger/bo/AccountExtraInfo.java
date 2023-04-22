@@ -1,25 +1,37 @@
 package org.maxtorm.ledger.bo;
 
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import lombok.ToString;
-import org.maxtorm.ledger.util.LedgerDecimal;
-
-
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.maxtorm.ledger.util.LedgerDecimal;
 import org.slf4j.helpers.MessageFormatter;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 public class AccountExtraInfo {
+    private AccountExtraInfo_Fund fund = null;
+    private AccountExtraInfo_Debit debit = null;
+    private AccountExtraInfo_Credit credit = null;
+    private AccountExtraInfo_Security security = null;
+
+    @Override
+    public String toString() {
+        try {
+            return new ObjectMapper().setSerializationInclusion(Include.NON_NULL).writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", e.getMessage()).getMessage());
+        }
+    }
+
     @Converter(autoApply = true)
     public static class AccountExtraInfoConverter implements AttributeConverter<AccountExtraInfo, String> {
         @Override
@@ -41,68 +53,37 @@ public class AccountExtraInfo {
         }
     }
 
-    @Override
-    public String toString() {
-        try {
-            return new ObjectMapper().setSerializationInclusion(Include.NON_NULL).writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(MessageFormatter.format("Error converting AccountBalanceExtraInfo: {}", e.getMessage()).getMessage());
-        }
-    }
-
     @Getter
     @Setter
     @NonNull
     public static class AccountExtraInfo_Debit {
-        private String card_no_tail = "";
+        private String cardNoTail = "";
     }
 
     @Getter
     @Setter
     @NonNull
     public static class AccountExtraInfo_Credit {
-        private String card_no_tail = "";
+        private String cardNoTail = "";
     }
 
     @Getter
     @Setter
     @NonNull
+    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class AccountExtraInfo_Security {
-
-    }
-
-    @Getter
-    @Setter
-    @NonNull
-    public static class AccountExtraInfo_Fund {
-        // 计价货币
-        private Commodity commodityOfAccount = Commodity.Undefined;
-
-        // 基金净值
-        private BigDecimal netWorth = LedgerDecimal.ZERO;
-
-        // 市值
-        private BigDecimal marketValue = LedgerDecimal.ZERO;
-
-        // 平均成本价
-        private BigDecimal averageCostPrice = LedgerDecimal.ZERO;
-
-        // 摊薄成本价
-        private BigDecimal dilutedCostPrice = LedgerDecimal.ZERO;
-
-        // 总买入
-        private BigDecimal totalBuyInAmount = LedgerDecimal.ZERO;
-
-        // 总卖出
-        private BigDecimal totalSelloutAmount = LedgerDecimal.ZERO;
-
-        // 持仓总成本
-        private BigDecimal totalHoldingCost = LedgerDecimal.ZERO;
-
-        // 未实现收益 = 市值 - 持仓总成本
+        private BigDecimal totalMarketValue = LedgerDecimal.ZERO;
+        private BigDecimal totalCost = LedgerDecimal.ZERO;
         private BigDecimal unrealizedGain = LedgerDecimal.ZERO;
     }
 
-    private AccountExtraInfo_Fund fund = null;
-    private AccountExtraInfo_Debit debit = null;
+    @Getter
+    @Setter
+    @NonNull
+    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class AccountExtraInfo_Fund {
+        private BigDecimal totalMarketValue = LedgerDecimal.ZERO;
+        private BigDecimal totalCost = LedgerDecimal.ZERO;
+        private BigDecimal unrealizedGain = LedgerDecimal.ZERO;
+    }
 }
