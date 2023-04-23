@@ -3,12 +3,15 @@ package org.maxtorm.ledger.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.api.Api;
+import org.maxtorm.ledger.bo.AccountTree;
 import org.maxtorm.ledger.service.AccountService;
 import org.maxtorm.ledger.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/account")
@@ -25,6 +28,14 @@ public class AccountController {
 
         var response = new Api.OpenAccountResponse();
         response.setAccount(account);
+        return Result.success(response);
+    }
+
+    @GetMapping(value = "tree")
+    public @ResponseBody Result<Api.GetAccountTreeResponse> tree() {
+        List<AccountTree> accountTreeList = accountService.tree("");
+        var response = new Api.GetAccountTreeResponse();
+        response.setAccountTree(accountTreeList.get(0));
         return Result.success(response);
     }
 

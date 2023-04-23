@@ -1,18 +1,15 @@
 import axios from "axios";
+import {AccountTree} from "./entity";
 
 const service = axios.create({
 })
 
-export interface account {
-    name: string,
-    iconId: string
+
+class Api {
+    async accountTree() {
+        const accountTree: AccountTree = ((await service.get('/api/account/tree')).data.data.accountTree);
+        return accountTree;
+    }
 }
 
-export interface accountTree {
-    account: account
-    children: Array<accountTree>
-}
-export async function portalAccountTree() {
-    const accountTree: accountTree = (await service.get('/api/portal/tree')).data.data.accountTree;
-    return accountTree;
-}
+export const api = new Api();

@@ -1,13 +1,21 @@
 <script lang="ts">
-import {portalAccountTree,accountTree} from './api/api'
+import {mapMutations, mapState} from "vuex";
+import {api} from "./api/api";
+import {AccountTree} from "./api/entity";
+
 export default {
-    data() {
-        return {
-            accountTree: Array<accountTree>()
-        }
+    computed: {
+        ...mapState({
+            accountTree: 'accountTree'
+        }),
+    },
+    methods: {
+        ...mapMutations([
+            'setAccountTree'
+        ]),
     },
     async mounted() {
-        this.accountTree = [await portalAccountTree()];
+        this.setAccountTree(await api.accountTree());
     }
 }
 </script>
@@ -16,18 +24,26 @@ export default {
     <t-layout>
         <t-aside>
             <t-menu>
-                <t-submenu value="account" title="账户">
+                <t-submenu value="account" title="account">
                     <template #icon>
                         <t-icon name="folder"/>
                     </template>
-                    <t-tree :data="accountTree" :keys="{label: 'name'}">
+                    <t-tree :data="accountTree.children" id="account-tree" v-if="accountTree != null">
+                        <template #icon="{ node }">
+                            <t-icon v-if="node.getChildren() && !node.expanded" name="add" />
+                            <t-icon v-else-if="node.getChildren() && node.expanded" name="remove" />
+                        </template>
+                        <template #label="{node}">
+                            <t-avatar :image="`/static/${node.data.iconId}`" shape="round" size="20px"></t-avatar>
+                            {{node.data.name}}
+                        </template>
                     </t-tree>
                 </t-submenu>
                 <t-menu-item>
                     <template #icon>
                         <t-icon name="user"/>
                     </template>
-                    收款人
+                    transaction
                 </t-menu-item>
                 <t-menu-item>
 
@@ -41,6 +57,8 @@ export default {
         </t-layout>
     </t-layout>
 </template>
-
 <style scoped>
+#account-tree {
+    margin: 0 var(--td-comp-margin-xl);
+}
 </style>

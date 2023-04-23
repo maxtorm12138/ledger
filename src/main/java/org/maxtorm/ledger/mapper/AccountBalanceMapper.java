@@ -1,5 +1,6 @@
 package org.maxtorm.ledger.mapper;
 
+import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -8,7 +9,7 @@ import org.maxtorm.ledger.po.AccountBalancePo;
 
 import java.util.List;
 
-@Mapper
+@Mapper(builder = @Builder(disableBuilder = true))
 public interface AccountBalanceMapper {
     AccountBalanceMapper INSTANCE = Mappers.getMapper(AccountBalanceMapper.class);
 

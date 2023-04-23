@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
 
 @Service
 @AllArgsConstructor
@@ -39,39 +40,10 @@ public class AccountService {
         }
 
         // system root account, balances should always be zero
-        {
-            AccountPo system_root = new AccountPo();
-            system_root.setAccountId("system_root");
-            system_root.setName("system_root");
-            entityInsertRepository.insertAccount(system_root);
-        }
-
-        // initialize root account
-        {
-            AccountPo user_root = new AccountPo();
-            user_root.setAccountId("user_root");
-            user_root.setName("user_root");
-            user_root.setParentAccountId("system_root");
-            entityInsertRepository.insertAccount(user_root);
-        }
-
-        // initialize equity account
-        {
-            AccountPo equity = new AccountPo();
-            equity.setAccountId("equity");
-            equity.setName("equity");
-            equity.setParentAccountId("system_root");
-            entityInsertRepository.insertAccount(equity);
-        }
-
-        // initialize expenditure account
-        {
-            AccountPo expenditure = new AccountPo();
-            expenditure.setAccountId("expenditure");
-            expenditure.setName("expenditure");
-            expenditure.setParentAccountId("equity");
-            entityInsertRepository.insertAccount(expenditure);
-        }
+        open(Account.builder().accountId("system_root").name("system_root").build());
+        open(Account.builder().accountId("user_account").name("user account").parentAccountId("system_root").build());
+        open(Account.builder().accountId("equity").name("equity").parentAccountId("system_root").build());
+        open(Account.builder().accountId("expenditure").name("expenditure").parentAccountId("equity").build());
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
@@ -101,26 +73,25 @@ public class AccountService {
         return Optional.of(account);
     }
 
-    @Transactional(value = Transactional.TxType.SUPPORTS)
-    public List<Account> findAccountWithBalanceByParentAccountId(String parentAccountId) {
-        var accountPoList = accountRepository.findAccountPosByParentAccountId(parentAccountId);
-        if (accountPoList.isEmpty()) {
-            return List.of();
-        }
-
-        var accountList = AccountMapper.INSTANCE.convertPosToBos(accountPoList);
-        accountList.forEach(account -> {
-            var accountBalancePoList = accountBalanceRepository.findAccountBalancePos(account.getAccountId());
-            account.setAccountBalance(AccountBalanceMapper.INSTANCE.convertPosToBos(accountBalancePoList));
-        });
-
-        return accountList;
-    }
-
     public List<AccountTree> tree(String parentAccountId) {
-        List<AccountTree> accountTreeList = new ArrayList<>();
+        Function<String, List<Account>> findAccountWithBalanceByParentAccountId = (pAccountId) -> {
+            var accountPoList = accountRepository.findAccountPosByParentAccountId(parentAccountId);
+            if (accountPoList.isEmpty()) {
+                return List.of();
+            }
 
-        List<Account> accountList = findAccountWithBalanceByParentAccountId(parentAccountId);
+            var accountList = AccountMapper.INSTANCE.convertPosToBos(accountPoList);
+            accountList.forEach(account -> {
+                var accountBalancePoList = accountBalanceRepository.findAccountBalancePos(account.getAccountId());
+                account.setAccountBalance(AccountBalanceMapper.INSTANCE.convertPosToBos(accountBalancePoList));
+            });
+
+            return accountList;
+        };
+
+
+        List<AccountTree> accountTreeList = new ArrayList<>();
+        List<Account> accountList = findAccountWithBalanceByParentAccountId.apply(parentAccountId);
         accountList.forEach(account -> {
             AccountTree accountTree = AccountTreeMapper.INSTANCE.convert(account);
             accountTree.setChildren(tree(account.getAccountId()));
@@ -130,13 +101,14 @@ public class AccountService {
         return accountTreeList;
     }
 
-
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Account open(Account account) {
         var accountPo = AccountMapper.INSTANCE.convert(account);
-        String accountId = UUID.randomUUID().toString();
+        if (account.getAccountId().isEmpty()) {
+            String accountId = UUID.randomUUID().toString();
+            accountPo.setAccountId(accountId);
+        }
 
-        accountPo.setAccountId(accountId);
 
         entityInsertRepository.insertAccount(accountPo);
 

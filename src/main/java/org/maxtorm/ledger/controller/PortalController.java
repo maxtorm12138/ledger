@@ -16,12 +16,4 @@ import java.util.List;
 @RequestMapping("/api/portal")
 public class PortalController {
     private AccountService accountService;
-
-    @GetMapping("/tree")
-    public Result<Api.GetAccountTreeResponse> getAccountTree() {
-        List<AccountTree> accountTreeList = accountService.tree("");
-        var response = new Api.GetAccountTreeResponse();
-        response.setAccountTree(accountTreeList.get(0));
-        return Result.success(response);
-    }
 }

@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+const httpHost = 'http://localhost:52748';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
@@ -13,7 +14,12 @@ export default defineConfig({
   server: {
     proxy: {
       '^/api': {
-        target: 'http://localhost:54822',
+        target: httpHost,
+        changeOrigin: true,
+        secure: false
+      },
+      '^/static': {
+        target: httpHost,
         changeOrigin: true,
         secure: false
       }
