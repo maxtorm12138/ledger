@@ -7,8 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AccountTree {
-    private String name = "";
-    private Account account = new Account();
+public class AccountTree extends Account {
     private List<AccountTree> children = List.of();
 }

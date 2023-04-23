@@ -1,12 +1,14 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import TDesign from 'tdesign-vue-next'
+import { createStore } from 'vuex';
 import axios from "axios";
 import './assets/main.css'
 
 const app = createApp(App)
-app.use(TDesign)
-app.config.globalProperties.$http = axios;
+const store = createStore({})
 
+app.use(TDesign)
+app.use(store)
 app.mount('#app')
 

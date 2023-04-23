@@ -7,6 +7,7 @@ import org.maxtorm.ledger.bo.AccountTree;
 import org.maxtorm.ledger.bo.Commodity;
 import org.maxtorm.ledger.mapper.AccountBalanceMapper;
 import org.maxtorm.ledger.mapper.AccountMapper;
+import org.maxtorm.ledger.mapper.AccountTreeMapper;
 import org.maxtorm.ledger.po.AccountBalancePo;
 import org.maxtorm.ledger.po.AccountPo;
 import org.maxtorm.ledger.repository.AccountBalanceRepository;
@@ -121,9 +122,7 @@ public class AccountService {
 
         List<Account> accountList = findAccountWithBalanceByParentAccountId(parentAccountId);
         accountList.forEach(account -> {
-            AccountTree accountTree = new AccountTree();
-            accountTree.setName(account.getName());
-            accountTree.setAccount(account);
+            AccountTree accountTree = AccountTreeMapper.INSTANCE.convert(account);
             accountTree.setChildren(tree(account.getAccountId()));
             accountTreeList.add(accountTree);
         });

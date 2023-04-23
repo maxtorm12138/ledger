@@ -1,5 +1,5 @@
 <script lang="ts">
-import {portalAccountTree,accountTree} from './api/api.ts'
+import {portalAccountTree,accountTree} from './api/api'
 export default {
     data() {
         return {
