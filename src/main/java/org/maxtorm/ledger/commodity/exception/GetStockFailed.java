@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.broker.exception;
+package org.maxtorm.ledger.commodity.exception;
 
 import lombok.Getter;
 import org.maxtorm.ledger.bo.Commodity;

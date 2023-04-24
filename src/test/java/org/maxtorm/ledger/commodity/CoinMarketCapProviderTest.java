@@ -1,19 +1,19 @@
-package org.maxtorm.ledger.broker;
+package org.maxtorm.ledger.commodity;
 
 import org.junit.jupiter.api.Test;
 import org.maxtorm.ledger.bo.Commodity;
-import org.maxtorm.ledger.broker.exception.ConvertExchangeFailed;
+import org.maxtorm.ledger.commodity.exception.ConvertExchangeFailed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
 public class CoinMarketCapProviderTest {
-    private static final Logger logger = LoggerFactory.getLogger(CoinMarketCapProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(CoinMarketCapPriceProvider.class);
     @Test
     public void convertCnyToUsd () {
         String apiKey = System.getenv().get("COIN_MARKET_CAP_API_KEY");
-        CoinMarketCapProvider provider = new CoinMarketCapProvider(apiKey);
+        CoinMarketCapPriceProvider provider = new CoinMarketCapPriceProvider(apiKey);
 
         try {
             var amountCny = BigDecimal.valueOf(100);

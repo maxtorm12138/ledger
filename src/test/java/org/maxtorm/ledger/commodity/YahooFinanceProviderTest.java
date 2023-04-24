@@ -1,9 +1,9 @@
-package org.maxtorm.ledger.broker;
+package org.maxtorm.ledger.commodity;
 
 import org.junit.jupiter.api.Test;
 import org.maxtorm.ledger.bo.Commodity;
-import org.maxtorm.ledger.broker.exception.ConvertExchangeFailed;
-import org.maxtorm.ledger.broker.exception.GetStockFailed;
+import org.maxtorm.ledger.commodity.exception.ConvertExchangeFailed;
+import org.maxtorm.ledger.commodity.exception.GetStockFailed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ public class YahooFinanceProviderTest {
     private static final Logger logger = LoggerFactory.getLogger(YahooFinanceProviderTest.class);
     @Test
     public void convertCnyToUsd() {
-        YahooFinanceProvider provider = new YahooFinanceProvider();
+        YahooFinancePricePriceProvider provider = new YahooFinancePricePriceProvider();
         try {
             var amountCny = BigDecimal.valueOf(100);
             BigDecimal amountUsd;
@@ -26,7 +26,7 @@ public class YahooFinanceProviderTest {
 
     @Test
     public void getStockPrice() {
-        YahooFinanceProvider provider = new YahooFinanceProvider();
+        YahooFinancePricePriceProvider provider = new YahooFinancePricePriceProvider();
 
         try {
             var price = provider.getStockPrice(Commodity.of("Security.0700.HK"));
