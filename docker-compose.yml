@@ -37,7 +37,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
       - SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/ledger
-      - COIN_MARKET_CAP_API_KEY=${COIN_MARKET_CAP_API_KEY}
     ports:
       - "8080:8080"
     depends_on:

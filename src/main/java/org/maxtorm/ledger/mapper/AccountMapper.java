@@ -6,7 +6,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.po.AccountPo;
-import org.maxtorm.ledger.bo.AccountTree;
 
 import java.util.List;
 
