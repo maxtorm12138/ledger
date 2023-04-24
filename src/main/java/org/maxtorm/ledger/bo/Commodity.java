@@ -70,6 +70,14 @@ public class Commodity {
         }
     }
 
+    public String toQualifiedString() {
+        if (category == Category.Security) {
+            return String.join(".", getName(), getMarket().name());
+        }
+
+        return getName();
+    }
+
     public enum Category {
         Undefined,
         Security,
