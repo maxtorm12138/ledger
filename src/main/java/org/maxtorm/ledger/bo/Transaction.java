@@ -1,10 +1,11 @@
 package org.maxtorm.ledger.bo;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.maxtorm.ledger.util.LedgerDecimal;
+import org.maxtorm.ledger.commodity.Commodity;
 
 import java.math.BigDecimal;
 
@@ -13,23 +14,27 @@ import java.math.BigDecimal;
 @NonNull
 public class Transaction {
     @NotBlank
-    private String referenceNumber = "";
+    private String referenceNumber;
+
     @NotBlank
-    private String sourceAccountId = "";
-    private Commodity sourceCommodity = Commodity.Undefined;
-    private BigDecimal sourceCommodityAmount = LedgerDecimal.ZERO;
+    private String sourceAccountId;
+
+    @NotNull
+    private Commodity sourceCommodity;
+
+    @NotNull
+    private BigDecimal sourceCommodityAmount;
+
     @NotBlank
-    private String destinationAccountId = "";
-    private Commodity destinationCommodity = Commodity.Undefined;
-    private BigDecimal destinationCommodityAmount = LedgerDecimal.ZERO;
-    private ExtraInfoTag extraInfoTag = ExtraInfoTag.Undefined;
-    private TransactionExtraInfo transactionExtraInfo = new TransactionExtraInfo();
-    private TransactionState transactionState = TransactionState.Undefined;
-    public enum ExtraInfoTag {
-        Undefined,
-        Transfer,
-        CurrencyExchange
-    }
+    private String destinationAccountId;
+
+    @NotNull
+    private Commodity destinationCommodity;
+
+    @NotNull
+    private BigDecimal destinationCommodityAmount;
+
+    private TransactionState transactionState;
 
     public enum TransactionState {
         Undefined,

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.bo.AccountTree;
+import org.maxtorm.ledger.commodity.Commodity;
 
 public class Api {
     @Getter
@@ -33,5 +34,17 @@ public class Api {
     @Setter
     public static class GetAccountTreeResponse {
         AccountTree accountTree;
+    }
+
+    @Getter
+    @Setter
+    public static class GetHomeResponse {
+        private boolean isInitialized;
+    }
+
+    @Getter
+    @Setter
+    public static class LedgerInitializeRequest {
+        Commodity majorCommodity;
     }
 }

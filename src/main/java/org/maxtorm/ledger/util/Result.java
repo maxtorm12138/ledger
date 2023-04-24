@@ -26,6 +26,9 @@ public class Result<T> {
     @JsonSerialize(nullsUsing = NullObjectSerializer.class)
     T data = null;
 
+    public static <T> Result<T> success() {
+        return new Result<>(ErrorCode.Success, ErrorCode.Success.name(), ErrorCode.Success.name(), null);
+    }
 
     public static <T> Result<T> success(@NonNull T data) {
         return new Result<>(ErrorCode.Success, ErrorCode.Success.name(), ErrorCode.Success.name(), data);

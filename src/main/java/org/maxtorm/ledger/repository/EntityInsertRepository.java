@@ -28,9 +28,6 @@ public class EntityInsertRepository {
                             account_id,
                             parent_account_id,
                             name,
-                            category,
-                            icon_id,
-                            extra_info,
                             major_commodity,
                             create_time,
                             update_time)
@@ -38,9 +35,6 @@ public class EntityInsertRepository {
                             :account_id,
                             :parent_account_id,
                             :name,
-                            :category,
-                            :icon_id,
-                            :extra_info,
                             :major_commodity,
                             :create_time,
                             :update_time)
@@ -48,9 +42,6 @@ public class EntityInsertRepository {
                 .setParameter("account_id", accountPo.getAccountId())
                 .setParameter("parent_account_id", accountPo.getParentAccountId())
                 .setParameter("name", accountPo.getName())
-                .setParameter("category", accountPo.getCategory())
-                .setParameter("icon_id", accountPo.getIconId())
-                .setParameter("extra_info", accountPo.getExtraInfo().toString())
                 .setParameter("major_commodity", accountPo.getMajorCommodity().toString())
                 .setParameter("create_time", createAndUpdateTime)
                 .setParameter("update_time", createAndUpdateTime)

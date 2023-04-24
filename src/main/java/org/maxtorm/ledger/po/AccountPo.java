@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.maxtorm.ledger.bo.AccountExtraInfo;
-import org.maxtorm.ledger.bo.Commodity;
+import org.maxtorm.ledger.commodity.Commodity;
 
 
 @Getter
@@ -16,25 +15,18 @@ import org.maxtorm.ledger.bo.Commodity;
 public class AccountPo extends AbstractTimestampEntity {
     @Id
     @Column(name = "account_id", nullable = false)
-    private String accountId = "";
+    private String accountId;
 
     @Column(name = "parent_account_id", nullable = false)
-    private String parentAccountId = "";
+    private String parentAccountId;
 
     @Column(name = "name", nullable = false)
-    private String name = "";
+    private String name;
 
-    @Column(name = "icon_id", nullable = false)
-    private String iconId = "";
+    @Column(name = "icon", nullable = false)
+    private String icon;
 
     @Column(name = "major_commodity", nullable = false)
-    @Convert(converter = Commodity.CommodityConverter.class)
-    private Commodity majorCommodity = Commodity.Undefined;
-
-    @Column(name = "category", nullable = false)
-    private String category = "";
-
-    @Column(name = "extra_info", nullable = false, length = 2048)
-    @Convert(converter = AccountExtraInfo.AccountExtraInfoConverter.class)
-    private AccountExtraInfo extraInfo = new AccountExtraInfo();
+    @Convert(converter = Commodity.class)
+    private Commodity majorCommodity;
 }

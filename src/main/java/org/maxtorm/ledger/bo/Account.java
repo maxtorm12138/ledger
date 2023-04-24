@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.maxtorm.ledger.commodity.Commodity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,24 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account {
-    @Builder.Default
-    private String accountId = "";
-    @NotNull
-    @Builder.Default
-    private String parentAccountId = "";
+    private String accountId;
+
+    private String parentAccountId;
+
     @NotBlank(message = "name is required")
-    @Builder.Default
-    private String name = "";
-    @NotBlank(message = "category is required")
-    @Builder.Default
-    private String category = "";
+    private String name;
+
     @NotBlank(message = "icon id is required")
+    private String icon;
+
+    @NotNull
+    private Commodity majorCommodity;
+
     @Builder.Default
-    private String iconId = "account.svg";
-    @Builder.Default
-    private Commodity majorCommodity = Commodity.Undefined;
-    @Builder.Default
-    private AccountExtraInfo extraInfo = new AccountExtraInfo();
-    @Builder.Default
-    private List<AccountBalance> accountBalance = new ArrayList<>();
+    private List<AccountBalance> accountBalance = List.of();
 }

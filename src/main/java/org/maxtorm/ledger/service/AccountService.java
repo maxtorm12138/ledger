@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.bo.AccountTree;
-import org.maxtorm.ledger.bo.Commodity;
 import org.maxtorm.ledger.mapper.AccountBalanceMapper;
 import org.maxtorm.ledger.mapper.AccountMapper;
 import org.maxtorm.ledger.mapper.AccountTreeMapper;
@@ -36,14 +35,9 @@ public class AccountService {
     @Transactional(value = Transactional.TxType.REQUIRED)
     public void initialize() {
         if (accountRepository.getAccountPoByAccountId("system_root").isPresent()) {
-            return;
         }
 
         // system root account, balances should always be zero
-        open(Account.builder().accountId("system_root").name("system_root").build());
-        open(Account.builder().accountId("user_account").name("user account").parentAccountId("system_root").build());
-        open(Account.builder().accountId("equity").name("equity").parentAccountId("system_root").build());
-        open(Account.builder().accountId("expenditure").name("expenditure").parentAccountId("equity").build());
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
@@ -109,16 +103,13 @@ public class AccountService {
             accountPo.setAccountId(accountId);
         }
 
-
         entityInsertRepository.insertAccount(accountPo);
 
-        if (account.getMajorCommodity().getCategory() != Commodity.Category.Undefined) {
-            AccountBalancePo accountBalancePo = new AccountBalancePo();
-            accountBalancePo.setAccountId(accountPo.getAccountId());
-            accountBalancePo.setCommodity(accountPo.getMajorCommodity());
-            accountBalancePo.setBookBalance(BigDecimal.ZERO);
-            entityInsertRepository.insertAccountBalance(accountBalancePo);
-        }
+        AccountBalancePo accountBalancePo = new AccountBalancePo();
+        accountBalancePo.setAccountId(accountPo.getAccountId());
+        accountBalancePo.setCommodity(accountPo.getMajorCommodity());
+        accountBalancePo.setBookBalance(BigDecimal.ZERO);
+        entityInsertRepository.insertAccountBalance(accountBalancePo);
 
         return AccountMapper.INSTANCE.convert(accountPo);
     }
