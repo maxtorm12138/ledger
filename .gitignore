@@ -35,3 +35,4 @@ build/
 ### sqlite database ###
 ledger.db
 src/main/resources/application.properties
+.env
