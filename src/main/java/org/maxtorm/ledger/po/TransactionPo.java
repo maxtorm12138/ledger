@@ -46,4 +46,8 @@ public class TransactionPo extends AbstractTimestampEntity {
 
     @Column(name = "transaction_state", nullable = false)
     private Transaction.TransactionState transactionState;
+
+    @OneToOne
+    @JoinColumn(name = "reference_number", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private TransactionStockPo stock;
 }
