@@ -15,10 +15,6 @@ import lombok.Setter;
 @Table(name = "user_transaction_stock")
 public class TransactionStockPo extends AbstractTimestampEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "transaction_stock_id", nullable = false)
-    private String transactionStockId;
-    
     @Column(name = "reference_number", nullable = false)
     private String referenceNumber;
     

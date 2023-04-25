@@ -24,10 +24,9 @@ public class AccountController {
     @PostMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Result<Api.OpenAccountResponse> open(@Valid @RequestBody Api.OpenAccountRequest request) {
         var account = request.getAccount();
-        account = accountService.open(account);
+        accountService.open(account);
 
         var response = new Api.OpenAccountResponse();
-        response.setAccount(account);
         return Result.success(response);
     }
 

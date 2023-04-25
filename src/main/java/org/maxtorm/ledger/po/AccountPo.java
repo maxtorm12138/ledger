@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.maxtorm.ledger.commodity.Commodity;
+import org.maxtorm.ledger.commodity.CommodityAttributeConverter;
 
 
 @Getter
@@ -27,6 +28,6 @@ public class AccountPo extends AbstractTimestampEntity {
     private String icon;
 
     @Column(name = "major_commodity", nullable = false)
-    @Convert(converter = Commodity.class)
+    @Convert(converter = CommodityAttributeConverter.class)
     private Commodity majorCommodity;
 }

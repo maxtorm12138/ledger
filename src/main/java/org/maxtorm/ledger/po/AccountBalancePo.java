@@ -1,13 +1,11 @@
 package org.maxtorm.ledger.po;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.maxtorm.ledger.commodity.Commodity;
+import org.maxtorm.ledger.commodity.CommodityAttributeConverter;
 import org.maxtorm.ledger.util.LedgerDecimal;
 
 import java.math.BigDecimal;
@@ -26,6 +24,7 @@ public class AccountBalancePo extends AbstractTimestampEntity {
     private String accountId;
 
     @Column(name = "commodity", nullable = false)
+    @Convert(converter = CommodityAttributeConverter.class)
     private Commodity commodity;
 
     @Column(name = "book_balance", precision = 34, scale = 5)

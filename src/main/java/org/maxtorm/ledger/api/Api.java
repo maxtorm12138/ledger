@@ -19,8 +19,6 @@ public class Api {
     @Getter
     @Setter
     public static class OpenAccountResponse {
-        @NotNull
-        Account account;
     }
 
     @Getter

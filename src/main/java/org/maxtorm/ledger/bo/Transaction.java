@@ -35,11 +35,4 @@ public class Transaction {
     private BigDecimal destinationCommodityAmount;
 
     private TransactionState transactionState;
-
-    public enum TransactionState {
-        Undefined,
-        Created,
-        Confirmed,
-        Canceled
-    }
 }
