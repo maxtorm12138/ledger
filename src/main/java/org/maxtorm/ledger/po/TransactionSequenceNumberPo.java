@@ -13,6 +13,5 @@ import lombok.Setter;
 @Table(name = "user_transaction_sequence")
 public class TransactionSequenceNumberPo {
     @Id
-    @GeneratedValue
     private Long sequence_number;
 }
