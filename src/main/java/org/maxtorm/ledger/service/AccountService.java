@@ -96,22 +96,21 @@ public class AccountService {
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Account open(Account account) {
+    public void open(Account account) {
         var accountPo = AccountMapper.INSTANCE.convert(account);
         if (account.getAccountId().isEmpty()) {
             String accountId = UUID.randomUUID().toString();
             accountPo.setAccountId(accountId);
         }
-
-        entityInsertRepository.insertAccount(accountPo);
+        accountRepository.save(accountPo);
 
         AccountBalancePo accountBalancePo = new AccountBalancePo();
+        accountBalancePo.setAccountBalanceId(String.format("%s|%s", accountPo.getAccountId(), accountPo.getMajorCommodity().getQualifiedName()));
         accountBalancePo.setAccountId(accountPo.getAccountId());
         accountBalancePo.setCommodity(accountPo.getMajorCommodity());
         accountBalancePo.setBookBalance(BigDecimal.ZERO);
-        entityInsertRepository.insertAccountBalance(accountBalancePo);
 
-        return AccountMapper.INSTANCE.convert(accountPo);
+        accountBalanceRepository.save(accountBalancePo);
     }
 
     private List<AccountPo> pathImpl(String childAccountId, String fatherAccountId) {

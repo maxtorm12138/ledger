@@ -46,9 +46,4 @@ public class TransactionPo extends AbstractTimestampEntity {
 
     @Column(name = "transaction_state", nullable = false)
     private Transaction.TransactionState transactionState;
-
-    @Column(name = "extra_info", nullable = false, length = 2048)
-    @Convert(converter = TransactionExtraInfo.TransactionExtraInfoConverter.class)
-    private TransactionExtraInfo transactionExtraInfo;
-
 }
