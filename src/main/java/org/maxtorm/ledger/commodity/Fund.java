@@ -16,4 +16,8 @@ public class Fund extends Commodity {
         category = "currency";
         name = matcher.group("name");
     }
+
+    public String getCode() {
+        return name;
+    }
 }

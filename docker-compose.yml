@@ -14,6 +14,12 @@ services:
     ports:
       - "3306:3306"
 
+  easymoneyapi:
+    container_name: 'easymoneyapi'
+    image: kouchao/tiantian_fund_api
+    ports:
+      - "10001:3000"
+
   futuopend:
     container_name: 'futuopend'
     image: futuopend:7.1.3308
@@ -41,3 +47,5 @@ services:
       - "8080:8080"
     depends_on:
       - database
+      - easymoneyapi
+
