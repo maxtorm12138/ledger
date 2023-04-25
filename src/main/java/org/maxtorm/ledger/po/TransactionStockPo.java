@@ -14,16 +14,14 @@ import lombok.Setter;
 @Entity(name = "user_transaction_stock")
 @Table(name = "user_transaction_stock")
 public class TransactionStockPo extends AbstractTimestampEntity {
-  @Id
-  @Column(name = "transaction_stock_id", nullable = false)
-  private String transactionStockId;
-
-  @Column(name = "reference_number", nullable = false)
-  private String referenceNumber;
-
-  @Column(name = "price", precision = 34, scale = 5, nullable = false)
-  private BigDecimal price;
-
-  @Column(name = "service_charge", precision = 34, scale = 5, nullable = false)
-  private BigDecimal serviceCharge;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "transaction_stock_id", nullable = false)
+    private String transactionStockId;
+    
+    @Column(name = "reference_number", nullable = false)
+    private String referenceNumber;
+    
+    @Column(name = "price", precision = 34, scale = 5, nullable = false)
+    private BigDecimal price;
 }
