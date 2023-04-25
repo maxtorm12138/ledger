@@ -32,6 +32,7 @@ public class TransactionPo extends AbstractTimestampEntity {
     @Column(name = "category", nullable = false)
     private String category;
 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "sequence_number", nullable = false)
     private Long sequenceNumber;
 
@@ -81,7 +82,7 @@ public class TransactionPo extends AbstractTimestampEntity {
     //////////////////////////////////////////////////////////////////////////////////
     
 
-    // extend extra info for stock
+    // extend extra info for stock if not stock then it's null
     @OneToOne
     @JoinColumn(name = "reference_number", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private TransactionStockPo stock;
