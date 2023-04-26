@@ -27,16 +27,15 @@ public class AccountBalancePo extends AbstractTimestampEntity {
     @Convert(converter = CommodityAttributeConverter.class)
     private Commodity commodity;
 
-    @Column(name = "book_balance", precision = 34, scale = 5)
-    private BigDecimal bookBalance = LedgerDecimal.ZERO;
+    @Column(name = "book_balance", precision = 34, scale = 5, nullable = false)
+    private BigDecimal bookBalance;
 
-    @Column(name = "total_inflow", precision = 34, scale = 5)
-    private BigDecimal totalInflow = LedgerDecimal.ZERO;
+    @Column(name = "total_inflow", precision = 34, scale = 5, nullable = false)
+    private BigDecimal totalInflow;
 
-    @Column(name = "total_outflow", precision = 34, scale = 5)
-    private BigDecimal totalOutflow = LedgerDecimal.ZERO;
+    @Column(name = "total_outflow", precision = 34, scale = 5, nullable = false)
+    private BigDecimal totalOutflow;
 
-    @Column(name = "uncommitted_amount", precision = 34, scale = 5)
-    private BigDecimal unCommittedAmount = LedgerDecimal.ZERO;
-
+    @Column(name = "uncommitted_amount", precision = 34, scale = 5, nullable = false)
+    private BigDecimal uncommittedAmount;
 }
