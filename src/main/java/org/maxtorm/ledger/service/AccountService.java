@@ -90,6 +90,9 @@ public class AccountService {
         accountBalancePo.setAccountId(accountPo.getAccountId());
         accountBalancePo.setCommodity(accountPo.getMajorCommodity());
         accountBalancePo.setBookBalance(BigDecimal.ZERO);
+        accountBalancePo.setTotalInflow(BigDecimal.ZERO);
+        accountBalancePo.setTotalOutflow(BigDecimal.ZERO);
+        accountBalancePo.setUnCommittedAmount(BigDecimal.ZERO);
 
         accountBalanceRepository.save(accountBalancePo);
     }
