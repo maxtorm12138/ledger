@@ -23,19 +23,15 @@ import java.time.LocalDate;
         @Index(name = "index_receiver_account_id", columnList = "receiver_account_id")})
 public class TransactionPo extends AbstractTimestampEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "transaction_id", nullable = false)
-    private String transaction_id;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_transaction_sequence_generator")
+    @Column(name = "sequence_number", nullable = false)
+    private Long sequenceNumber;
 
     @Column(name = "reference_number", nullable = false)
     private String referenceNumber;
 
     @Column(name = "category", nullable = false)
     private String category;
-
-    @OneToOne
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private TransactionSequenceNumberPo sequenceNumber;
 
     @Column(name = "initiate_date")
     private LocalDate initiateDate;
