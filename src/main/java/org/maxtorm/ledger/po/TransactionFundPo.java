@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity(name = "user_transaction_fund")
 @Table(name = "user_transaction_fund")
-public class TransactionFundPo {
+public class TransactionFundPo extends AbstractTimestampEntity {
     @Id
     @Column(name = "reference_number", nullable = false)
     private String referenceNumber;
