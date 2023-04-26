@@ -1,7 +1,7 @@
 package org.maxtorm.ledger;
 
-import org.maxtorm.ledger.commodity.providers.EasyMoneyProvider;
-import org.maxtorm.ledger.commodity.providers.IFundProvider;
+import org.maxtorm.ledger.entity.commodity.providers.EasyMoneyProvider;
+import org.maxtorm.ledger.entity.commodity.providers.IFundProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

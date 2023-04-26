@@ -1,7 +1,7 @@
 package org.maxtorm.ledger.repository;
 
 import jakarta.persistence.LockModeType;
-import org.maxtorm.ledger.po.AccountPo;
+import org.maxtorm.ledger.entity.account.AccountPo;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.CrudRepository;
 

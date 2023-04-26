@@ -1,10 +1,10 @@
-package org.maxtorm.ledger.bo;
+package org.maxtorm.ledger.entity.account;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.maxtorm.ledger.commodity.Commodity;
+import org.maxtorm.ledger.entity.commodity.Commodity;
 
 import java.util.List;
 

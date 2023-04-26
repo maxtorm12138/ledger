@@ -1,7 +1,7 @@
 package org.maxtorm.ledger.repository;
 
 import jakarta.persistence.LockModeType;
-import org.maxtorm.ledger.po.AccountBalancePo;
+import org.maxtorm.ledger.entity.account.AccountBalancePo;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.bo;
+package org.maxtorm.ledger.entity.account;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

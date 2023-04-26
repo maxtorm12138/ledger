@@ -2,7 +2,7 @@ package org.maxtorm.ledger.controller;
 
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.api.Api;
-import org.maxtorm.ledger.bo.Account;
+import org.maxtorm.ledger.entity.account.Account;
 import org.maxtorm.ledger.service.AccountService;
 import org.maxtorm.ledger.util.Result;
 import org.springframework.web.bind.annotation.*;

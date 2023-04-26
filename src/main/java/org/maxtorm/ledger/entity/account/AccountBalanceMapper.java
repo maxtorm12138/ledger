@@ -1,11 +1,9 @@
-package org.maxtorm.ledger.mapper;
+package org.maxtorm.ledger.entity.account;
 
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import org.maxtorm.ledger.bo.AccountBalance;
-import org.maxtorm.ledger.po.AccountBalancePo;
 
 import java.util.List;
 

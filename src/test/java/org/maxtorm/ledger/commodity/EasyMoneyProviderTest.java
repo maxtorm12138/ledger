@@ -1,8 +1,9 @@
 package org.maxtorm.ledger.commodity;
 
 import org.junit.jupiter.api.Test;
-import org.maxtorm.ledger.commodity.exception.CommodityProviderNetworkFailException;
-import org.maxtorm.ledger.commodity.providers.EasyMoneyProvider;
+import org.maxtorm.ledger.entity.commodity.Fund;
+import org.maxtorm.ledger.entity.commodity.exception.CommodityProviderNetworkFailException;
+import org.maxtorm.ledger.entity.commodity.providers.EasyMoneyProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

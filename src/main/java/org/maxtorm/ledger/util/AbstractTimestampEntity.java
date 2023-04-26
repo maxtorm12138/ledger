@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.po;
+package org.maxtorm.ledger.util;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

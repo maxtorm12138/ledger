@@ -1,13 +1,13 @@
-package org.maxtorm.ledger.po;
+package org.maxtorm.ledger.entity.transaction;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import org.maxtorm.ledger.commodity.Commodity;
-import org.maxtorm.ledger.commodity.CommodityAttributeConverter;
-import org.maxtorm.ledger.transaction.TransactionState;
+import org.maxtorm.ledger.entity.commodity.Commodity;
+import org.maxtorm.ledger.entity.commodity.CommodityAttributeConverter;
+import org.maxtorm.ledger.util.AbstractTimestampEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

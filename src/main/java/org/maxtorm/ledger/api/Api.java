@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.maxtorm.ledger.bo.Account;
-import org.maxtorm.ledger.bo.AccountTree;
-import org.maxtorm.ledger.commodity.Commodity;
-import org.maxtorm.ledger.commodity.Currency;
-import org.maxtorm.ledger.commodity.Fund;
+import org.maxtorm.ledger.entity.account.Account;
+import org.maxtorm.ledger.entity.account.AccountTree;
+import org.maxtorm.ledger.entity.commodity.Commodity;
+import org.maxtorm.ledger.entity.commodity.Currency;
+import org.maxtorm.ledger.entity.commodity.Fund;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

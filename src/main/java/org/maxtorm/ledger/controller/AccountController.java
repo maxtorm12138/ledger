@@ -3,7 +3,7 @@ package org.maxtorm.ledger.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.api.Api;
-import org.maxtorm.ledger.bo.AccountTree;
+import org.maxtorm.ledger.entity.account.AccountTree;
 import org.maxtorm.ledger.service.AccountService;
 import org.maxtorm.ledger.util.Result;
 import org.slf4j.Logger;

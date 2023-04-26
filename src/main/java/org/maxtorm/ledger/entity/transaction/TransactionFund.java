@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.transaction;
+package org.maxtorm.ledger.entity.transaction;
 
 import java.math.BigDecimal;
 
@@ -10,5 +10,5 @@ import lombok.Setter;
 public class TransactionFund extends Transaction {
     private BigDecimal nav;
     private BigDecimal averageCost;
-    private boolean isClosed;
+    private boolean closed;
 }

@@ -1,8 +1,8 @@
-package org.maxtorm.ledger.bo;
+package org.maxtorm.ledger.entity.account;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.maxtorm.ledger.commodity.Commodity;
+import org.maxtorm.ledger.entity.commodity.Commodity;
 
 import java.math.BigDecimal;
 

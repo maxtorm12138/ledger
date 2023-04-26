@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.transaction;
+package org.maxtorm.ledger.entity.transaction;
 
 import java.math.BigDecimal;
 
@@ -12,5 +12,5 @@ public class TransactionStock extends Transaction {
     private BigDecimal averageCost;
     private BigDecimal dilutionCost;
     private BigDecimal totalServiceCharge;
-    private boolean isClosed;
+    private boolean closed;
 }

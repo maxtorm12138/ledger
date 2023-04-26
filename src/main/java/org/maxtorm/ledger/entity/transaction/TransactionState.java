@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.transaction;
+package org.maxtorm.ledger.entity.transaction;
 
 public enum TransactionState {
   Undefined,

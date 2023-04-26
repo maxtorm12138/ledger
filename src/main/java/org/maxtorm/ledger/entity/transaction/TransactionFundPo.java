@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.po;
+package org.maxtorm.ledger.entity.transaction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.maxtorm.ledger.util.AbstractTimestampEntity;
 
 import java.math.BigDecimal;
 
@@ -24,6 +25,6 @@ public class TransactionFundPo extends AbstractTimestampEntity {
     @Column(name = "average_cost", precision = 34, scale = 5, nullable = false)
     private BigDecimal averageCost;
 
-    @Column(name = "is_closed", nullable = false)
-    private boolean isClosed;
+    @Column(name = "closed", nullable = false)
+    private boolean closed;
 }

@@ -1,9 +1,10 @@
 package org.maxtorm.ledger.commodity;
 
 import org.junit.jupiter.api.Test;
-import org.maxtorm.ledger.commodity.exception.CommodityProviderNetworkFailException;
-import org.maxtorm.ledger.commodity.providers.IFxProvider;
-import org.maxtorm.ledger.commodity.providers.YahooFinanceProvider;
+import org.maxtorm.ledger.entity.commodity.Currency;
+import org.maxtorm.ledger.entity.commodity.exception.CommodityProviderNetworkFailException;
+import org.maxtorm.ledger.entity.commodity.providers.IFxProvider;
+import org.maxtorm.ledger.entity.commodity.providers.YahooFinanceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

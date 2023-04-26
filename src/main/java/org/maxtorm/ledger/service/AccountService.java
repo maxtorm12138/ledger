@@ -2,22 +2,18 @@ package org.maxtorm.ledger.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.maxtorm.ledger.bo.Account;
-import org.maxtorm.ledger.bo.AccountBalance;
-import org.maxtorm.ledger.bo.AccountTree;
-import org.maxtorm.ledger.commodity.Commodity;
-import org.maxtorm.ledger.mapper.AccountBalanceMapper;
-import org.maxtorm.ledger.mapper.AccountMapper;
-import org.maxtorm.ledger.mapper.AccountTreeMapper;
-import org.maxtorm.ledger.po.AccountBalancePo;
-import org.maxtorm.ledger.po.AccountPo;
+import org.maxtorm.ledger.entity.account.Account;
+import org.maxtorm.ledger.entity.account.AccountTree;
+import org.maxtorm.ledger.entity.commodity.Commodity;
+import org.maxtorm.ledger.entity.account.AccountBalanceMapper;
+import org.maxtorm.ledger.entity.account.AccountMapper;
+import org.maxtorm.ledger.entity.account.AccountTreeMapper;
+import org.maxtorm.ledger.entity.account.AccountBalancePo;
+import org.maxtorm.ledger.entity.account.AccountPo;
 import org.maxtorm.ledger.repository.AccountBalanceRepository;
 import org.maxtorm.ledger.repository.AccountRepository;
-import org.maxtorm.ledger.repository.EntityInsertRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,7 +24,6 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class AccountService {
     private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
-    private EntityInsertRepository entityInsertRepository;
 
     private AccountRepository accountRepository;
     private AccountBalanceRepository accountBalanceRepository;
@@ -92,7 +87,7 @@ public class AccountService {
         accountBalancePo.setBookBalance(BigDecimal.ZERO);
         accountBalancePo.setTotalInflow(BigDecimal.ZERO);
         accountBalancePo.setTotalOutflow(BigDecimal.ZERO);
-        accountBalancePo.setUnCommittedAmount(BigDecimal.ZERO);
+        accountBalancePo.setUncommittedAmount(BigDecimal.ZERO);
 
         accountBalanceRepository.save(accountBalancePo);
     }
@@ -122,7 +117,7 @@ public class AccountService {
         accountBalancePo.setBookBalance(BigDecimal.ZERO);
         accountBalancePo.setTotalInflow(BigDecimal.ZERO);
         accountBalancePo.setTotalOutflow(BigDecimal.ZERO);
-        accountBalancePo.setUnCommittedAmount(BigDecimal.ZERO);
+        accountBalancePo.setUncommittedAmount(BigDecimal.ZERO);
 
         accountBalanceRepository.save(accountBalancePo);
     }
