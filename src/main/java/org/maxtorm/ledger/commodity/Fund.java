@@ -13,7 +13,7 @@ public class Fund extends Commodity {
             throw new IllegalArgumentException(MessageFormatter.format("invalid fund: {}", qualifiedName).getMessage());
         }
 
-        category = "currency";
+        category = "fund";
         name = matcher.group("name");
     }
 
