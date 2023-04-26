@@ -2,9 +2,10 @@ package org.maxtorm.ledger.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.maxtorm.ledger.bo.Transaction;
+
 import org.maxtorm.ledger.mapper.TransactionMapper;
 import org.maxtorm.ledger.repository.TransactionRepository;
+import org.maxtorm.ledger.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

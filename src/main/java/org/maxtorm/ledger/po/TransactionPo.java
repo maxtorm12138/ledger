@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.maxtorm.ledger.bo.TransactionState;
+
 import org.maxtorm.ledger.commodity.Commodity;
 import org.maxtorm.ledger.commodity.CommodityAttributeConverter;
+import org.maxtorm.ledger.transaction.TransactionState;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

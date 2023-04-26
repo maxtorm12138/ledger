@@ -1,4 +1,4 @@
-package org.maxtorm.ledger.bo;
+package org.maxtorm.ledger.transaction;
 
 import lombok.Getter;
 import lombok.Setter;
