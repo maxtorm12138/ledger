@@ -116,6 +116,10 @@ public class AccountService {
         accountBalancePo.setAccountBalanceId(String.format("%s|%s", accountId, commodity.getQualifiedName()));
         accountBalancePo.setAccountId(accountId);
         accountBalancePo.setCommodity(commodity);
+        accountBalancePo.setBookBalance(BigDecimal.ZERO);
+        accountBalancePo.setTotalInflow(BigDecimal.ZERO);
+        accountBalancePo.setTotalOutflow(BigDecimal.ZERO);
+        accountBalancePo.setUnCommittedAmount(BigDecimal.ZERO);
 
         accountBalanceRepository.save(accountBalancePo);
     }
