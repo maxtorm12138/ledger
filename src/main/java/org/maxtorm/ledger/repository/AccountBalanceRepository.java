@@ -13,8 +13,7 @@ public interface AccountBalanceRepository extends CrudRepository<AccountBalanceP
     List<AccountBalancePo> findAccountBalancePosByAccountId(String accountId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select a from account_balance a where a.accountId = ?1")
-    List<AccountBalancePo> getAccountBalancePos(String accountId);
+    List<AccountBalancePo> getAccountBalancePosByAccountId(String accountId);
 
     @Query("select a from account_balance a where a.accountId = ?1")
     List<AccountBalancePo> findAccountBalancePos(String accountId);

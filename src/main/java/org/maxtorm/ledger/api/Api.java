@@ -7,6 +7,11 @@ import lombok.Setter;
 import org.maxtorm.ledger.bo.Account;
 import org.maxtorm.ledger.bo.AccountTree;
 import org.maxtorm.ledger.commodity.Commodity;
+import org.maxtorm.ledger.commodity.Currency;
+import org.maxtorm.ledger.commodity.Fund;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class Api {
     @Getter
@@ -44,5 +49,14 @@ public class Api {
     @Setter
     public static class LedgerInitializeRequest {
         Commodity majorCommodity;
+    }
+
+    @Getter
+    @Setter
+    public static class GetFundNavResponse {
+        private Fund fund;
+        private Currency currency;
+        private BigDecimal nav;
+        private LocalDate date;
     }
 }

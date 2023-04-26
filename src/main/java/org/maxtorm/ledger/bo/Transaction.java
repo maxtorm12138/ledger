@@ -1,38 +1,27 @@
 package org.maxtorm.ledger.bo;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.maxtorm.ledger.commodity.Commodity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
-@NonNull
 public class Transaction {
-    @NotBlank
+    private Long sequenceNumber;
     private String referenceNumber;
-
-    @NotBlank
-    private String sourceAccountId;
-
-    @NotNull
-    private Commodity sourceCommodity;
-
-    @NotNull
-    private BigDecimal sourceCommodityAmount;
-
-    @NotBlank
-    private String destinationAccountId;
-
-    @NotNull
-    private Commodity destinationCommodity;
-
-    @NotNull
-    private BigDecimal destinationCommodityAmount;
-
+    private String category;
+    private LocalDate initiateDate;
     private TransactionState transactionState;
+    private String note;
+    private String initiatorAccountId;
+    private String receiverAccountId;
+    private Commodity initiatorCommodity;
+    private Commodity receiverCommodity;
+    private BigDecimal initiatorAmount;
+    private BigDecimal receiverAmount;
+    private BigDecimal initiatorBookBalanceSnapshot;
+    private BigDecimal receiverBookBalanceSnapshot;
 }

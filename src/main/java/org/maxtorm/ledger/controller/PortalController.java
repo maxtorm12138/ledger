@@ -17,12 +17,6 @@ public class PortalController {
     public @ResponseBody Result<Api.GetHomeResponse> home() {
         var response = new Api.GetHomeResponse();
 
-        var root = accountService.getAccountByName("system_root");
-        if (root.isEmpty()) {
-            response.setInitialized(false);
-            return Result.success(response);
-        }
-
         response.setInitialized(true);
         return Result.success(response);
     }

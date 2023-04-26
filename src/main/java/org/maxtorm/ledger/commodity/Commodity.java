@@ -40,6 +40,15 @@ public class Commodity {
     public String toString() {
         return getDisplayName();
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Commodity) {
+            return getQualifiedName().equals((((Commodity) other).getQualifiedName()));
+        }
+
+        return false;
+    }
 }
 
 

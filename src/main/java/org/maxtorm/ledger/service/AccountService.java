@@ -3,7 +3,9 @@ package org.maxtorm.ledger.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.bo.Account;
+import org.maxtorm.ledger.bo.AccountBalance;
 import org.maxtorm.ledger.bo.AccountTree;
+import org.maxtorm.ledger.commodity.Commodity;
 import org.maxtorm.ledger.mapper.AccountBalanceMapper;
 import org.maxtorm.ledger.mapper.AccountMapper;
 import org.maxtorm.ledger.mapper.AccountTreeMapper;
@@ -31,42 +33,21 @@ public class AccountService {
     private AccountRepository accountRepository;
     private AccountBalanceRepository accountBalanceRepository;
 
-    @EventListener(ApplicationReadyEvent.class)
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public void initialize() {
-        if (accountRepository.getAccountPoByAccountId("system_root").isPresent()) {
-        }
-
-        // system root account, balances should always be zero
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public Optional<Account> getAccountByName(String name) {
-        var accountPo = accountRepository.getAccountPoByName(name);
-        return accountPo.map(AccountMapper.INSTANCE::convert);
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public Optional<Account> getAccount(String accountId) {
+    public Optional<Account> getAccountWithBalance(String accountId) {
         var accountPo = accountRepository.getAccountPoByAccountId(accountId);
-        return accountPo.map(AccountMapper.INSTANCE::convert);
-    }
-
-    @Transactional(value = Transactional.TxType.REQUIRED)
-    public Optional<Account> getAccountWithBalanceByName(String name) {
-        var accountPo = accountRepository.getAccountPoByName(name);
         if (accountPo.isEmpty()) {
             return Optional.empty();
         }
 
         var account = AccountMapper.INSTANCE.convert(accountPo.get());
-
-        var accountBalancePoList = accountBalanceRepository.getAccountBalancePos(account.getAccountId());
+        var accountBalancePoList = accountBalanceRepository.getAccountBalancePosByAccountId(accountId);
         account.setAccountBalance(AccountBalanceMapper.INSTANCE.convertPosToBos(accountBalancePoList));
 
         return Optional.of(account);
     }
 
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public List<AccountTree> tree(String parentAccountId) {
         Function<String, List<Account>> findAccountWithBalanceByParentAccountId = (pAccountId) -> {
             var accountPoList = accountRepository.findAccountPosByParentAccountId(parentAccountId);
@@ -109,6 +90,32 @@ public class AccountService {
         accountBalancePo.setAccountId(accountPo.getAccountId());
         accountBalancePo.setCommodity(accountPo.getMajorCommodity());
         accountBalancePo.setBookBalance(BigDecimal.ZERO);
+
+        accountBalanceRepository.save(accountBalancePo);
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
+    public void openBalance(String accountId, Commodity commodity) {
+        // lock account
+        var account = getAccountWithBalance(accountId).orElseThrow();
+
+        // search existence
+        boolean exists = false;
+        for (var accountBalance: account.getAccountBalance()) {
+            if (accountBalance.getCommodity().equals(commodity)) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (exists) {
+            return;
+        }
+
+        AccountBalancePo accountBalancePo = new AccountBalancePo();
+        accountBalancePo.setAccountBalanceId(String.format("%s|%s", accountId, commodity.getQualifiedName()));
+        accountBalancePo.setAccountId(accountId);
+        accountBalancePo.setCommodity(commodity);
 
         accountBalanceRepository.save(accountBalancePo);
     }

@@ -18,13 +18,5 @@ public class TransactionService {
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public void transfer(Transaction transaction) {
-        var transactionPo = TransactionMapper.INSTANCE.convert(transaction);
-
-        var sourceAccount = accountService.getAccount(transaction.getSourceAccountId()).orElseThrow();
-        var destinationAccount = accountService.getAccount(transaction.getDestinationAccountId()).orElseThrow();
-
-        transactionPo = transactionRepository.save(transactionPo);
-
-        TransactionMapper.INSTANCE.convert(transactionPo);
     }
 }
