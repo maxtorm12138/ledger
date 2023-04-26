@@ -15,18 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Account {
     private String accountId;
-
     private String parentAccountId;
-
-    @NotBlank(message = "name is required")
     private String name;
-
-    @NotBlank(message = "icon id is required")
     private String icon;
-
-    @NotNull
     private Commodity majorCommodity;
-
-    @Builder.Default
-    private List<AccountBalance> accountBalance = List.of();
+    private List<AccountBalance> accountBalance;
 }

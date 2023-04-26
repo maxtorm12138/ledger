@@ -11,7 +11,7 @@ public class Currency extends Commodity {
     public static final Currency USD = new Currency("currency.USD");
 
     public Currency(String qualifiedName) {
-        var matcher = Pattern.compile("^currency.(?<name>[A-Za-z0-9]+)$").matcher(qualifiedName);
+        var matcher = Pattern.compile("^currency.(?<name>[A-Z]+)$").matcher(qualifiedName);
         if (!matcher.find()) {
             throw new IllegalArgumentException(MessageFormatter.format("invalid currency: {}", qualifiedName).getMessage());
         }

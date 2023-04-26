@@ -15,9 +15,7 @@ public class LedgerApplication {
 
     @Bean
     Logbook logbook() {
-        Logbook logbook = Logbook.builder()
-                .build();
-        return logbook;
+        return Logbook.create();
     }
 
     @Bean

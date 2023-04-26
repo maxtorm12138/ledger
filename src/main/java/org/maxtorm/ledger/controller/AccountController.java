@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/account")
@@ -22,12 +23,13 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping(value = "/open", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Result<Api.OpenAccountResponse> open(@Valid @RequestBody Api.OpenAccountRequest request) {
+    public @ResponseBody Result<Void> open(@Valid @RequestBody Api.OpenAccountRequest request) {
         var account = request.getAccount();
+        account.setAccountId(UUID.randomUUID().toString());
+        account.setParentAccountId("user_account");
         accountService.open(account);
 
-        var response = new Api.OpenAccountResponse();
-        return Result.success(response);
+        return Result.success();
     }
 
     @GetMapping(value = "tree")

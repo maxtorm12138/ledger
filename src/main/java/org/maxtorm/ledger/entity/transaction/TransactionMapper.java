@@ -3,9 +3,11 @@ package org.maxtorm.ledger.entity.transaction;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(builder = @Builder(disableBuilder = true))
 public interface TransactionMapper {
+    TransactionMapper INSTANCE = Mappers.getMapper(TransactionMapper.class);
 
     default TransactionPo convert(Transaction transaction) {
         if (transaction instanceof TransactionFund) {

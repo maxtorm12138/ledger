@@ -1,7 +1,10 @@
 package org.maxtorm.ledger.entity.transaction;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.maxtorm.ledger.entity.commodity.Commodity;
 
 import java.math.BigDecimal;
@@ -9,6 +12,9 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 public class Transaction {
     private Long sequenceNumber;
     private String referenceNumber;

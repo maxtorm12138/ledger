@@ -48,6 +48,7 @@ public class Api {
     @Getter
     @Setter
     public static class LedgerInitializeRequest {
+        @NotNull
         Commodity majorCommodity;
     }
 
@@ -58,5 +59,26 @@ public class Api {
         private Currency currency;
         private BigDecimal nav;
         private LocalDate date;
+    }
+
+    @Getter
+    @Setter
+    public static class TransferRequest {
+        @NotBlank
+        private String initiatorAccountId;
+        @NotBlank
+        private String receiverAccountId;
+        @NotNull
+        private Commodity commodity;
+        @NotNull
+        private BigDecimal amount;
+        @NotNull
+        private String serviceChargePayer;
+        @NotNull
+        private BigDecimal serviceCharge;
+        @NotNull
+        private LocalDate initiateDate;
+        @NotNull
+        private String note;
     }
 }

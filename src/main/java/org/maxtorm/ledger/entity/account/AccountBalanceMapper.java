@@ -15,7 +15,6 @@ public interface AccountBalanceMapper {
 
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
-    @Mapping(target = "accountId", ignore = true)
     @Mapping(target = "accountBalanceId", ignore = true)
     AccountBalancePo convert(AccountBalance balance);
 

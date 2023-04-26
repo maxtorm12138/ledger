@@ -35,7 +35,4 @@ public class AccountBalancePo extends AbstractTimestampEntity {
 
     @Column(name = "total_outflow", precision = 34, scale = 5, nullable = false)
     private BigDecimal totalOutflow;
-
-    @Column(name = "uncommitted_amount", precision = 34, scale = 5, nullable = false)
-    private BigDecimal uncommittedAmount;
 }

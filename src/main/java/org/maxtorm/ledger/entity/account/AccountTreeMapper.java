@@ -13,7 +13,6 @@ public interface AccountTreeMapper {
     @Mapping(target = "accountBalance", ignore = true)
     AccountTree convert(AccountPo accountPo);
 
-    @Mapping(target = "accountBalance", ignore = true)
     @Mapping(target = "children", ignore = true)
     AccountTree convert(Account account);
 }

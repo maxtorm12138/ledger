@@ -2,18 +2,15 @@ package org.maxtorm.ledger.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.maxtorm.ledger.entity.account.Account;
-import org.maxtorm.ledger.entity.account.AccountTree;
+import org.maxtorm.ledger.entity.account.*;
 import org.maxtorm.ledger.entity.commodity.Commodity;
-import org.maxtorm.ledger.entity.account.AccountBalanceMapper;
-import org.maxtorm.ledger.entity.account.AccountMapper;
-import org.maxtorm.ledger.entity.account.AccountTreeMapper;
-import org.maxtorm.ledger.entity.account.AccountBalancePo;
-import org.maxtorm.ledger.entity.account.AccountPo;
-import org.maxtorm.ledger.repository.AccountBalanceRepository;
-import org.maxtorm.ledger.repository.AccountRepository;
+import org.maxtorm.ledger.exception.OpenAccountAlreadyExistException;
+import org.maxtorm.ledger.entity.account.AccountBalanceRepository;
+import org.maxtorm.ledger.entity.account.AccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -43,6 +40,21 @@ public class AccountService {
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
+    public Optional<AccountBalance> getAccountBalance(String accountId, Commodity commodity) {
+        var accountBalancePo = accountBalanceRepository.getAccountBalancePoByAccountIdAndCommodity(accountId, commodity);
+        return accountBalancePo.map(AccountBalanceMapper.INSTANCE::convert);
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRED)
+    public void saveAccountBalance(AccountBalance accountBalance) {
+        var accountBalancePo = AccountBalanceMapper.INSTANCE.convert(accountBalance);
+        accountBalancePo.setAccountBalanceId("%s|%s".formatted(accountBalance.getAccountId(), accountBalance.getCommodity().getQualifiedName()));
+
+        accountBalancePo = accountBalanceRepository.saveAndFlush(accountBalancePo);
+        AccountBalanceMapper.INSTANCE.convert(accountBalancePo);
+    }
+
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public List<AccountTree> tree(String parentAccountId) {
         Function<String, List<Account>> findAccountWithBalanceByParentAccountId = (pAccountId) -> {
             var accountPoList = accountRepository.findAccountPosByParentAccountId(parentAccountId);
@@ -51,10 +63,11 @@ public class AccountService {
             }
 
             var accountList = AccountMapper.INSTANCE.convertPosToBos(accountPoList);
-            accountList.forEach(account -> {
-                var accountBalancePoList = accountBalanceRepository.findAccountBalancePos(account.getAccountId());
+
+            for (Account account : accountList) {
+                var accountBalancePoList = accountBalanceRepository.findAccountBalancePosByAccountId(account.getAccountId());
                 account.setAccountBalance(AccountBalanceMapper.INSTANCE.convertPosToBos(accountBalancePoList));
-            });
+            }
 
             return accountList;
         };
@@ -73,23 +86,23 @@ public class AccountService {
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public void open(Account account) {
-        var accountPo = AccountMapper.INSTANCE.convert(account);
-        if (account.getAccountId().isEmpty()) {
-            String accountId = UUID.randomUUID().toString();
-            accountPo.setAccountId(accountId);
+        try {
+            var accountPo = AccountMapper.INSTANCE.convert(account);
+            accountRepository.saveAndFlush(accountPo);
+
+            AccountBalancePo accountBalancePo = new AccountBalancePo();
+            accountBalancePo.setAccountBalanceId(String.format("%s|%s", accountPo.getAccountId(), accountPo.getMajorCommodity().getQualifiedName()));
+            accountBalancePo.setAccountId(accountPo.getAccountId());
+            accountBalancePo.setCommodity(accountPo.getMajorCommodity());
+            accountBalancePo.setBookBalance(BigDecimal.ZERO);
+            accountBalancePo.setTotalInflow(BigDecimal.ZERO);
+            accountBalancePo.setTotalOutflow(BigDecimal.ZERO);
+
+            accountBalanceRepository.saveAndFlush(accountBalancePo);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new OpenAccountAlreadyExistException(MessageFormatter.format("{} already exists", account.getName()).getMessage());
         }
-        accountRepository.save(accountPo);
-
-        AccountBalancePo accountBalancePo = new AccountBalancePo();
-        accountBalancePo.setAccountBalanceId(String.format("%s|%s", accountPo.getAccountId(), accountPo.getMajorCommodity().getQualifiedName()));
-        accountBalancePo.setAccountId(accountPo.getAccountId());
-        accountBalancePo.setCommodity(accountPo.getMajorCommodity());
-        accountBalancePo.setBookBalance(BigDecimal.ZERO);
-        accountBalancePo.setTotalInflow(BigDecimal.ZERO);
-        accountBalancePo.setTotalOutflow(BigDecimal.ZERO);
-        accountBalancePo.setUncommittedAmount(BigDecimal.ZERO);
-
-        accountBalanceRepository.save(accountBalancePo);
     }
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -117,7 +130,6 @@ public class AccountService {
         accountBalancePo.setBookBalance(BigDecimal.ZERO);
         accountBalancePo.setTotalInflow(BigDecimal.ZERO);
         accountBalancePo.setTotalOutflow(BigDecimal.ZERO);
-        accountBalancePo.setUncommittedAmount(BigDecimal.ZERO);
 
         accountBalanceRepository.save(accountBalancePo);
     }

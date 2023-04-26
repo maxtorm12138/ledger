@@ -8,4 +8,5 @@ public enum ErrorCode {
     IllegalArgument,
     NoSuchElement,
     MethodNotSupported,
+    OpenAccountAlreadyExists,
 }
