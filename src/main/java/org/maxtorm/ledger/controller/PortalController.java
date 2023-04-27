@@ -5,14 +5,20 @@ import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.api.Api;
 import org.maxtorm.ledger.entity.account.Account;
 import org.maxtorm.ledger.service.AccountService;
+import org.maxtorm.ledger.util.LedgerConfig;
 import org.maxtorm.ledger.util.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/portal")
 public class PortalController {
+    private static final Logger logger = LoggerFactory.getLogger(PortalController.class);
     private AccountService accountService;
+    private LedgerConfig ledgerConfig;
 
     @GetMapping("/home")
     public @ResponseBody Result<Api.GetHomeResponse> home() {
@@ -33,41 +39,17 @@ public class PortalController {
                         .majorCommodity(request.getMajorCommodity())
                         .build());
 
-        accountService.open(
-                Account.builder()
-                        .accountId("user_account")
-                        .name("user account")
-                        .icon("system")
-                        .parentAccountId("system_root")
-                        .majorCommodity(request.getMajorCommodity())
-                        .build());
+        ledgerConfig.getAccountInitializeProperties().getAccounts().forEach((id, acc) -> {
+            Account account = new Account();
+            BeanUtils.copyProperties(acc, account);
 
-        accountService.open(
-                Account.builder()
-                        .accountId("equity")
-                        .name("equity")
-                        .icon("system")
-                        .parentAccountId("system_root")
-                        .majorCommodity(request.getMajorCommodity())
-                        .build());
+            account.setAccountId(id);
+            if (account.getParentAccountId() == null || account.getParentAccountId().isEmpty()) {
+                account.setParentAccountId("system_root");
+            }
 
-        accountService.open(
-                Account.builder()
-                        .accountId("expenditure")
-                        .name("expenditure")
-                        .icon("system")
-                        .parentAccountId("system_root")
-                        .majorCommodity(request.getMajorCommodity())
-                        .build());
-
-        accountService.open(
-                Account.builder()
-                        .accountId("service_charge")
-                        .name("service charge")
-                        .icon("system")
-                        .parentAccountId("expenditure")
-                        .majorCommodity(request.getMajorCommodity())
-                        .build());
+            accountService.open(account);
+        });
 
         return Result.success();
     }
