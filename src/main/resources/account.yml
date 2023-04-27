@@ -1,0 +1,14 @@
+accounts:
+  equity:
+    name: 'equity'
+    icon: system
+    major-commodity: currency.CNY
+  expenditure:
+    name: 'expenditure'
+    icon: 'system'
+    major-commodity: currency.CNY
+  service_charge:
+    name: 'service charge'
+    icon: 'system'
+    major-commodity: currency.CNY
+    parent-account-id: 'expenditure'
