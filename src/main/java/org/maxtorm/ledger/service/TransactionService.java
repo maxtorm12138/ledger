@@ -34,7 +34,7 @@ public class TransactionService {
         accountService.saveAccountBalance(receiverBalanceSnapshot);
 
         var transactionPo = TransactionMapper.INSTANCE.convert(transaction);
-        transactionPo = transactionRepository.save(transactionPo);
+        transactionRepository.saveAndFlush(transactionPo);
 
     }
 }
