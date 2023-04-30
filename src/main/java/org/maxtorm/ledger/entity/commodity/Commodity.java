@@ -11,25 +11,25 @@ import java.util.regex.Pattern;
 @JsonDeserialize(using = CommodityJsonDeserializer.class)
 public class Commodity {
     @Getter
-    protected String category;
+    protected String namespace;
     protected String name;
 
     protected Commodity() {
     }
 
     public Commodity(String qualifiedName) {
-        var matcher = Pattern.compile("^(?<category>[A-Za-z0-9]+).(?<name>[A-Za-z0-9]+)$").matcher(qualifiedName);
+        var matcher = Pattern.compile("^(?<namespace>[A-Za-z0-9]+).(?<name>[A-Za-z0-9]+)$").matcher(qualifiedName);
 
         if (!matcher.find()) {
             throw new IllegalArgumentException(MessageFormatter.format("invalid commodity: {}", qualifiedName).getMessage());
         }
 
-        category = matcher.group("category");
+        namespace = matcher.group("namespace");
         name = matcher.group("name");
     }
 
     public String getQualifiedName() {
-        return String.join(".", category, name);
+        return String.join(".", namespace, name);
     }
 
     public String getDisplayName() {

@@ -6,7 +6,7 @@ import org.slf4j.helpers.MessageFormatter;
 import java.util.regex.Pattern;
 
 public class Stock extends Commodity {
-    public static final String categoryName = "stock";
+    public static final String NAMESPACE = "stock";
 
     @Getter
     private final String market;
@@ -22,7 +22,7 @@ public class Stock extends Commodity {
     }
 
     public String getQualifiedName() {
-        return String.join(".", category, name, market);
+        return String.join(".", namespace, name, market);
     }
 
     public String getDisplayName() {

@@ -14,9 +14,9 @@ public class CommodityBuilder {
         String category = matcher.group("category");
 
         return switch (category) {
-            case Currency.categoryName -> new Currency(qualifiedName);
-            case Stock.categoryName -> new Stock(qualifiedName);
-            case Fund.categoryName -> new Fund(qualifiedName);
+            case Currency.NAMESPACE -> new Currency(qualifiedName);
+            case Stock.NAMESPACE -> new Stock(qualifiedName);
+            case Fund.NAMESPACE -> new Fund(qualifiedName);
             default -> new Commodity(qualifiedName);
         };
     }
