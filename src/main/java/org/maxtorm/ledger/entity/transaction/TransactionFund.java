@@ -1,12 +1,12 @@
 package org.maxtorm.ledger.entity.transaction;
 
-import java.math.BigDecimal;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter

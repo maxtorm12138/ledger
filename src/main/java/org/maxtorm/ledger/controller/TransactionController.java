@@ -1,7 +1,6 @@
 package org.maxtorm.ledger.controller;
 
 import lombok.AllArgsConstructor;
-
 import org.maxtorm.ledger.api.Api;
 import org.maxtorm.ledger.entity.transaction.Transaction;
 import org.maxtorm.ledger.entity.transaction.TransactionState;
@@ -18,6 +17,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/transaction")
+@CrossOrigin(origins = "*")
 public class TransactionController {
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
     private TransactionService transactionService;
@@ -30,7 +30,6 @@ public class TransactionController {
         accountService.openBalance(request.getReceiverAccountId(), request.getCommodity());
 
         var transaction = Transaction.builder()
-                .sequenceNumber(0L)
                 .referenceNumber(UUID.randomUUID().toString())
                 .category("transfer")
                 .initiateDate(request.getInitiateDate())
@@ -46,6 +45,11 @@ public class TransactionController {
 
         transactionService.transfer(transaction);
 
+        return Result.success();
+    }
+
+    @PostMapping("/cancel")
+    public @ResponseBody Result<Void> cancel(@RequestBody Api.CancelTransactionRequest request) {
         return Result.success();
     }
 }

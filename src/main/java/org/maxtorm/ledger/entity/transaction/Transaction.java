@@ -28,6 +28,4 @@ public class Transaction {
     private Commodity receiverCommodity;
     private BigDecimal initiatorAmount;
     private BigDecimal receiverAmount;
-    private BigDecimal initiatorBookBalanceSnapshot;
-    private BigDecimal receiverBookBalanceSnapshot;
 }

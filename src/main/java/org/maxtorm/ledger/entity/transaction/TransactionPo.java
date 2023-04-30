@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import org.maxtorm.ledger.entity.commodity.Commodity;
 import org.maxtorm.ledger.entity.commodity.CommodityAttributeConverter;
 import org.maxtorm.ledger.util.AbstractTimestampEntity;
@@ -17,11 +16,11 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 @Entity(name = "user_transaction")
 @Table(
-    name = "user_transaction",
-    indexes = {
-        @Index(name = "index_reference_number", columnList = "reference_number"),
-        @Index(name = "index_initiator_account_id", columnList = "initiator_account_id"),
-        @Index(name = "index_receiver_account_id", columnList = "receiver_account_id")})
+        name = "user_transaction",
+        indexes = {
+                @Index(name = "index_reference_number", columnList = "reference_number"),
+                @Index(name = "index_initiator_account_id", columnList = "initiator_account_id"),
+                @Index(name = "index_receiver_account_id", columnList = "receiver_account_id")})
 public class TransactionPo extends AbstractTimestampEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_transaction_sequence_generator")
@@ -72,15 +71,7 @@ public class TransactionPo extends AbstractTimestampEntity {
     private BigDecimal receiverAmount;
     //////////////////////////////////////////////////////////////////////////////////
 
-    // book balance snapshot
-    //////////////////////////////////////////////////////////////////////////////////
-    @Column(name = "initiator_book_balance_snapshot", nullable = false, precision = 34, scale = 5)
-    private BigDecimal initiatorBookBalanceSnapshot;
 
-    @Column(name = "receiver_book_balance_snapshot", nullable = false, precision = 34, scale = 5)
-    private BigDecimal receiverBookBalanceSnapshot;
-    //////////////////////////////////////////////////////////////////////////////////
-    
     // extend extra info for stock if not stock then it's null
     @OneToOne
     @JoinColumn(name = "stock_reference_number", referencedColumnName = "reference_number", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT), insertable = false, updatable = false)

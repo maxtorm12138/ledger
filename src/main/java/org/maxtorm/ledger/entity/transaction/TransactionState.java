@@ -1,8 +1,8 @@
 package org.maxtorm.ledger.entity.transaction;
 
 public enum TransactionState {
-  Undefined,
-  Preparing,
-  Commited,
-  Rollbacked
+    Undefined,
+    Preparing,
+    Commited,
+    Rollbacked
 }

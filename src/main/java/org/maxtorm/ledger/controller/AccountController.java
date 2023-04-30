@@ -17,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/account")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 

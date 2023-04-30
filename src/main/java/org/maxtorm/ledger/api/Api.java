@@ -81,4 +81,11 @@ public class Api {
         @NotNull
         private String note;
     }
+
+    @Getter
+    @Setter
+    public static class CancelTransactionRequest {
+        @NotBlank
+        private String referenceNumber;
+    }
 }

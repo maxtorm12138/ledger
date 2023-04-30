@@ -1,14 +1,14 @@
 package org.maxtorm.ledger.entity.transaction;
 
-import java.math.BigDecimal;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.maxtorm.ledger.util.AbstractTimestampEntity;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ public class TransactionStockPo extends AbstractTimestampEntity {
     @Id
     @Column(name = "reference_number", nullable = false)
     private String referenceNumber;
-    
+
     @Column(name = "price", precision = 34, scale = 5, nullable = false)
     private BigDecimal price;
 

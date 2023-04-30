@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import org.maxtorm.ledger.entity.account.*;
 import org.maxtorm.ledger.entity.commodity.Commodity;
 import org.maxtorm.ledger.exception.OpenAccountAlreadyExistException;
-import org.maxtorm.ledger.entity.account.AccountBalanceRepository;
-import org.maxtorm.ledger.entity.account.AccountRepository;
+import org.maxtorm.ledger.util.AccountInitializeProperties;
+import org.maxtorm.ledger.util.LedgerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,53 @@ public class AccountService {
 
     private AccountRepository accountRepository;
     private AccountBalanceRepository accountBalanceRepository;
+    private LedgerConfig ledgerConfig;
+
+    @EventListener(ContextRefreshedEvent.class)
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void initialize() {
+        open(
+                Account.builder()
+                        .accountId("system_root")
+                        .name("system_root")
+                        .icon("system")
+                        .parentAccountId("")
+                        .description("system root")
+                        .majorCommodity(ledgerConfig.getAccountInitializeProperties().getMajorCommodity())
+                        .build());
+
+        initializeImpl(ledgerConfig.getAccountInitializeProperties().getAccountsToInitialize(), "system_root");
+    }
+
+    private void initializeImpl(HashMap<String, AccountInitializeProperties.AccountInitialize> accountToInitializeMap, String parentAccountId) {
+        if (accountToInitializeMap == null) {
+            return;
+        }
+
+        accountToInitializeMap.forEach((id, accountToInitialize) -> {
+            Account account = new Account();
+            BeanUtils.copyProperties(accountToInitialize, account);
+
+            account.setAccountId(id);
+            if (parentAccountId == null || parentAccountId.isEmpty()) {
+                account.setParentAccountId("system_root");
+            } else {
+                account.setParentAccountId(parentAccountId);
+            }
+
+            if (account.getMajorCommodity() == null) {
+                account.setMajorCommodity(ledgerConfig.getAccountInitializeProperties().getMajorCommodity());
+            }
+
+            if (account.getDescription() == null) {
+                account.setDescription(account.getName());
+            }
+
+            open(account);
+
+            initializeImpl(accountToInitialize.getChildren(), id);
+        });
+    }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Optional<Account> getAccountWithBalance(String accountId) {
@@ -49,9 +99,7 @@ public class AccountService {
     public void saveAccountBalance(AccountBalance accountBalance) {
         var accountBalancePo = AccountBalanceMapper.INSTANCE.convert(accountBalance);
         accountBalancePo.setAccountBalanceId("%s|%s".formatted(accountBalance.getAccountId(), accountBalance.getCommodity().getQualifiedName()));
-
         accountBalancePo = accountBalanceRepository.saveAndFlush(accountBalancePo);
-        AccountBalanceMapper.INSTANCE.convert(accountBalancePo);
     }
 
     @Transactional(value = Transactional.TxType.REQUIRED)
@@ -112,7 +160,7 @@ public class AccountService {
 
         // search existence
         boolean exists = false;
-        for (var accountBalance: account.getAccountBalance()) {
+        for (var accountBalance : account.getAccountBalance()) {
             if (accountBalance.getCommodity().equals(commodity)) {
                 exists = true;
                 break;

@@ -18,6 +18,7 @@ public class EasyMoneyProvider implements IFundProvider {
     private static final HttpClient httpClient = HttpClient.newBuilder().build();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String host = "http://easymoneyapi:3000";
+
     @Override
     public Pair<LocalDate, BigDecimal> getFundNav(Fund fund) throws CommodityProviderNetworkFailException {
         try {

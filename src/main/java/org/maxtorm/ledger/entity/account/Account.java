@@ -1,8 +1,9 @@
 package org.maxtorm.ledger.entity.account;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.maxtorm.ledger.entity.commodity.Commodity;
 
@@ -20,4 +21,5 @@ public class Account {
     private String icon;
     private Commodity majorCommodity;
     private List<AccountBalance> accountBalance;
+    private String description;
 }

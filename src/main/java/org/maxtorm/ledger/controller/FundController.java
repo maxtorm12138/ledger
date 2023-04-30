@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/fund")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class FundController {
     private static final Logger logger = LoggerFactory.getLogger(FundController.class);
     private IFundProvider fundProvider;
