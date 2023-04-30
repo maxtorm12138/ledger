@@ -69,6 +69,10 @@ public class AccountService {
                 account.setDescription(account.getName());
             }
 
+            if (account.getIcon() == null) {
+                account.setIcon("none");
+            }
+
             open(account);
 
             initializeImpl(accountToInitialize.getChildren(), id);

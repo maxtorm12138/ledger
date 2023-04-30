@@ -1,53 +1,42 @@
 major-commodity: currency.CNY
+
 accounts-to-initialize:
   equity:
     name: 'equity'
-    icon: 'none'
     children:
       salary:
         name: 'salary'
-        icon: 'none'
       interest:
         name: 'interest'
-        icon: 'none'
         children:
           time_deposit_interest:
             name: 'time deposit interest'
-            icon: 'none'
       annual_bonus:
         name: 'annual bonus'
-        icon: 'none'
+
   expenditure:
     name: 'expenditure'
-    icon: 'none'
     description: 'expenditure'
     children:
       service_charge:
         name: 'service charge'
-        icon: 'none'
       food:
         name: 'food'
-        icon: 'none'
       rent:
         name: 'rent'
-        icon: 'none'
       commission:
         name: 'commission'
-        icon: 'none'
+
   assets:
     name: 'assets'
-    icon: 'none'
     children:
       savings:
         name: 'savings'
-        icon: 'none'
+
   debt:
     name: 'debt'
-    icon: 'none'
     children:
       credits:
         name: 'credit'
-        icon: 'none'
       loan:
         name: 'loan'
-        icon: 'none'
