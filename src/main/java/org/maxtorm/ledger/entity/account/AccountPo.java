@@ -1,37 +1,44 @@
 package org.maxtorm.ledger.entity.account;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.maxtorm.ledger.entity.commodity.Commodity;
-import org.maxtorm.ledger.entity.commodity.CommodityAttributeConverter;
-import org.maxtorm.ledger.util.AbstractTimestampEntity;
+import lombok.NoArgsConstructor;
+import org.maxtorm.ledger.entity.commodity.CommodityPo;
+import org.maxtorm.ledger.entity.AbstractTimestampEntity;
 
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Setter
-@ToString(callSuper = true)
+@Builder(toBuilder = true)
 @Entity(name = "account")
-@Table(name = "account", indexes = {@Index(name = "parent_account_id", columnList = "parent_account_id"), @Index(name = "unique_name", columnList = "name", unique = true)})
+@Table(name = "account", indexes = @Index(name = "index_parent_guid", columnList = "parent_guid"))
 public class AccountPo extends AbstractTimestampEntity {
     @Id
-    @Column(name = "account_id", nullable = false)
-    private String accountId;
+    @Column(name = "guid", nullable = false)
+    private String guid;
 
-    @Column(name = "parent_account_id", nullable = false)
-    private String parentAccountId;
+    @Column(name = "parent_guid", nullable = false)
+    private String parentGuid;
+
+    @Column(name = "placeholder", nullable = false)
+    private boolean placeholder;
 
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @Column(name = "type", nullable = false)
+    private String type;
+
     @Column(name = "icon", nullable = false)
     private String icon;
 
-    @Column(name = "major_commodity", nullable = false)
-    @Convert(converter = CommodityAttributeConverter.class)
-    private Commodity majorCommodity;
-
-    @Column(name = "description", nullable = false)
-    private String description;
+    @OneToOne
+    @JoinColumn(name = "commodity_guid", referencedColumnName = "guid", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT), nullable = false)
+    private CommodityPo majorCommodity;
 }

@@ -1,22 +1,14 @@
 package org.maxtorm.ledger.entity.account;
 
-import org.mapstruct.Builder;
+import org.hibernate.annotations.Target;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.MappingConstants;
+import org.maxtorm.ledger.controller.AccountController;
 
-import java.util.List;
-
-@Mapper(builder = @Builder(disableBuilder = true))
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AccountMapper {
-    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
+    Account convertPoToBo(AccountPo accountPo);
 
-    @Mapping(target = "accountBalance", ignore = true)
-    Account convert(AccountPo account);
-
-    @Mapping(target = "createTime", ignore = true)
-    @Mapping(target = "updateTime", ignore = true)
-    AccountPo convert(Account account);
-
-    List<Account> convertPosToBos(List<AccountPo> accountPoList);
+    AccountPo convertBoToPo(Account account);
 }

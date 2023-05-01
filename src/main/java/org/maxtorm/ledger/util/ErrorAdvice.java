@@ -1,6 +1,5 @@
 package org.maxtorm.ledger.util;
 
-import org.maxtorm.ledger.exception.OpenAccountAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,11 +15,6 @@ public class ErrorAdvice {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<Result<Void>> handleHttpRequestMethodNotSupportedException(Exception ex) {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(Result.fail(ErrorCode.MethodNotSupported, ex.getMessage()));
-    }
-
-    @ExceptionHandler(OpenAccountAlreadyExistException.class)
-    public ResponseEntity<Result<Void>> handleAccountAlreadyExistException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Result.fail(ErrorCode.OpenAccountAlreadyExists, ex.getMessage()));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

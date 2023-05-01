@@ -1,53 +1,39 @@
 package org.maxtorm.ledger.entity.commodity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Getter;
-import org.slf4j.helpers.MessageFormatter;
+import lombok.*;
 
-import java.util.regex.Pattern;
+import java.math.BigInteger;
 
-@JsonSerialize(using = CommodityJsonSerializer.class)
-@JsonDeserialize(using = CommodityJsonDeserializer.class)
+@Getter
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Commodity {
-    @Getter
-    protected String namespace;
-    protected String name;
-
-    protected Commodity() {
-    }
-
-    public Commodity(String qualifiedName) {
-        var matcher = Pattern.compile("^(?<namespace>[A-Za-z0-9]+).(?<name>[A-Za-z0-9]+)$").matcher(qualifiedName);
-
-        if (!matcher.find()) {
-            throw new IllegalArgumentException(MessageFormatter.format("invalid commodity: {}", qualifiedName).getMessage());
-        }
-
-        namespace = matcher.group("namespace");
-        name = matcher.group("name");
-    }
+    private String guid;
+    private String namespace;
+    private String mnemonic;
+    private String fullName;
+    private String quoteSource;
+    private BigInteger fraction;
 
     public String getQualifiedName() {
-        return String.join(".", namespace, name);
-    }
-
-    public String getDisplayName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return getDisplayName();
+        return String.join("::", namespace, mnemonic);
     }
 
     @Override
     public boolean equals(Object other) {
         if (other instanceof Commodity) {
-            return getQualifiedName().equals((((Commodity) other).getQualifiedName()));
+            return getQualifiedName().equals(((Commodity) other).getQualifiedName());
+        } else if (other instanceof String) {
+            return getQualifiedName().equals(other);
         }
 
         return false;
+    }
+
+    public boolean equals(String other) {
+        return getQualifiedName().equals(other);
     }
 }
 
