@@ -1,2 +1,3 @@
 Flask~=2.3.2
 AkShare~=1.9.81
+yfinance~=0.2.18
