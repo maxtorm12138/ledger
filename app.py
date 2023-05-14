@@ -1,6 +1,11 @@
 import datetime
 import decimal
-from decimal import Decimal
+import json
+import time
+import urllib.request
+
+import requests_cache
+import urllib3
 from flask import Flask, request
 import akshare as ak
 import yfinance as yf
@@ -42,9 +47,37 @@ def get_fund_quote():
     quote.isodate = last_nav.iloc[0][0]
     quote.currency = 'CNY'
     quote.success = True
-    print(quote.to_dict())
+    app.logger.info(quote.to_dict())
     return quote.to_dict()
 
+
+@app.route('/security_quote')
+def get_security_quote():
+    code = request.args.get('code')
+
+    quote = Quote()
+
+    http = urllib3.ProxyManager(proxy_url='http://slave-router.lan:7893')
+    http_request = http.request(method='GET', url='https://query1.finance.yahoo.com/v6/finance/quote?symbols=' + code)
+    if http_request.status != 200:
+        quote.success = False
+        quote.errormsg = 'http fail %d'.format(http_request.status)
+        return quote.to_dict()
+
+    data = json.loads(http_request.data.decode('utf-8'))
+    data = data['quoteResponse']['result'][0]
+
+    quote.currency = data['currency']
+    quote.last = data['regularMarketPrice']
+    quote.isodate = datetime.datetime.fromtimestamp(data['regularMarketTime'])
+
+    quote.success = True
+
+    return quote.to_dict()
+
+@app.route('/currency_quote')
+def get_currency_quote():
+    pass
 
 if __name__ == '__main__':
     app.run()
