@@ -1,6 +1,7 @@
 import datetime
 import decimal
 import json
+import os
 import time
 import urllib.request
 
@@ -19,7 +20,7 @@ class Quote:
     isodate: datetime.date = None
     nav: float = None
     currency: str = None
-    success: bool = None
+    success: bool = False
     errormsg: str = ''
 
     def to_dict(self) -> dict:
@@ -34,6 +35,11 @@ class Quote:
         }
         return d
 
+class CurrencyRate:
+    from_amount: float
+    to_amount: float
+    success: bool = False
+    errormsg: str = ''
 
 @app.route('/fund_quote')
 def get_fund_quote():
@@ -57,8 +63,10 @@ def get_security_quote():
 
     quote = Quote()
 
-    # http = urllib3.ProxyManager(proxy_url='http://slave-router.lan:7893')
     http = urllib3.PoolManager()
+    if os.environ['PROXY_URL']:
+        http = urllib3.ProxyManager(proxy_url=os.environ['PROXY_URL'])
+
     http_request = http.request(method='GET', url='https://query1.finance.yahoo.com/v6/finance/quote?symbols=' + code)
     if http_request.status != 200:
         quote.success = False
@@ -67,6 +75,7 @@ def get_security_quote():
 
     data = json.loads(http_request.data.decode('utf-8'))
     data = data['quoteResponse']['result'][0]
+    app.logger.debug('response: %s', data)
 
     quote.currency = data['currency']
     quote.last = data['regularMarketPrice']
@@ -79,7 +88,18 @@ def get_security_quote():
 
 @app.route('/currency_quote')
 def get_currency_quote():
-    pass
+    from_currency = request.args.get('from')
+    to_currency = request.args.get('to')
+
+    http = urllib3.PoolManager()
+    if os.environ['PROXY_URL']:
+        http = urllib3.ProxyManager(proxy_url=os.environ['PROXY_URL'])
+
+    http_request = http.request(method='GET', url='https://query1.finance.yahoo.com/v6/finance/quote?symbols={}{}%3DX'.format(from_currency, to_currency))
+    if http_request.status != 200:
+        quote.success = False
+        quote.errormsg = 'http fail {}'.format(http_request.status)
+        return quote.to_dict()
 
 
 if __name__ == '__main__':
