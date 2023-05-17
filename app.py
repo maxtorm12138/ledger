@@ -26,7 +26,7 @@ class Quote:
         d = {
             'name': self.name,
             'last': self.last,
-            'isodate': self.isodate.strftime('%Y-%m-%d'),
+            'isodate': self.isodate.strftime('%Y-%m-%d') if self.isodate is not None else None,
             'nav': self.nav,
             'currency': self.currency,
             'success': self.success,
@@ -57,11 +57,12 @@ def get_security_quote():
 
     quote = Quote()
 
-    http = urllib3.ProxyManager(proxy_url='http://slave-router.lan:7893')
+    # http = urllib3.ProxyManager(proxy_url='http://slave-router.lan:7893')
+    http = urllib3.PoolManager()
     http_request = http.request(method='GET', url='https://query1.finance.yahoo.com/v6/finance/quote?symbols=' + code)
     if http_request.status != 200:
         quote.success = False
-        quote.errormsg = 'http fail %d'.format(http_request.status)
+        quote.errormsg = 'http fail {}'.format(http_request.status)
         return quote.to_dict()
 
     data = json.loads(http_request.data.decode('utf-8'))
@@ -75,9 +76,11 @@ def get_security_quote():
 
     return quote.to_dict()
 
+
 @app.route('/currency_quote')
 def get_currency_quote():
     pass
+
 
 if __name__ == '__main__':
     app.run()
