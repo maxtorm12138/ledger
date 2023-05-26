@@ -99,6 +99,7 @@ def get_security_quote():
 
     quote.success = True
 
+    app.logger.info(quote.to_dict())
     return quote.to_dict()
 
 
@@ -129,6 +130,7 @@ def get_currency_quote():
     currency_rate.isodate = datetime.datetime.fromtimestamp(data['regularMarketTime'])
     currency_rate.success = True
 
+    app.logger.info(currency_rate.to_dict())
     return currency_rate.to_dict()
 
 
