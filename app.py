@@ -41,6 +41,13 @@ class CurrencyRate:
     success: bool = False
     errormsg: str = ''
 
+    def to_dict(self) -> dict:
+        d = {
+            'success': self.success,
+            'errormsg': self.errormsg
+        }
+        return d
+
 @app.route('/fund_quote')
 def get_fund_quote():
     code = request.args.get('code')
@@ -88,6 +95,7 @@ def get_security_quote():
 
 @app.route('/currency_quote')
 def get_currency_quote():
+    currency_rate = CurrencyRate()
     from_currency = request.args.get('from')
     to_currency = request.args.get('to')
 
@@ -97,9 +105,9 @@ def get_currency_quote():
 
     http_request = http.request(method='GET', url='https://query1.finance.yahoo.com/v6/finance/quote?symbols={}{}%3DX'.format(from_currency, to_currency))
     if http_request.status != 200:
-        quote.success = False
-        quote.errormsg = 'http fail {}'.format(http_request.status)
-        return quote.to_dict()
+        currency_rate.success = False
+        currency_rate.errormsg = 'http fail {}'.format(http_request.status)
+        return currency_rate.to_dict()
 
 
 if __name__ == '__main__':
