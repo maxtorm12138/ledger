@@ -1,2 +1,0 @@
-# ledger
-my financial ledger
