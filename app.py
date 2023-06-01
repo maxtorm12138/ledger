@@ -106,7 +106,7 @@ def get_currency_quote():
     to_currency = request.args.get('to')
 
     http = urllib3.PoolManager()
-    if os.environ['PROXY_URL']:
+    if os.environ.get('PROXY_URL'):
         http = urllib3.ProxyManager(proxy_url=os.environ['PROXY_URL'])
 
     http_request = http.request(method='GET',
