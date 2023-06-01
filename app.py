@@ -2,14 +2,10 @@ import datetime
 import decimal
 import json
 import os
-import time
-import urllib.request
 
-import requests_cache
 import urllib3
 from flask import Flask, request
 import akshare as ak
-import yfinance as yf
 
 app = Flask(__name__)
 
@@ -77,7 +73,7 @@ def get_security_quote():
     quote = Quote()
 
     http = urllib3.PoolManager()
-    if os.environ['PROXY_URL']:
+    if os.environ.get('PROXY_URL'):
         http = urllib3.ProxyManager(proxy_url=os.environ['PROXY_URL'])
 
     http_request = http.request(method='GET',
