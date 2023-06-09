@@ -50,7 +50,7 @@ class CurrencyRate:
         return d
 
 
-@app.route('/fund_quote')
+@app.route('/fund')
 def get_fund_quote():
     code = request.args.get('code')
     quote = Quote()
@@ -66,7 +66,7 @@ def get_fund_quote():
     return quote.to_dict()
 
 
-@app.route('/security_quote')
+@app.route('/security')
 def get_security_quote():
     code = request.args.get('code')
 
@@ -99,7 +99,7 @@ def get_security_quote():
     return quote.to_dict()
 
 
-@app.route('/currency_quote')
+@app.route('/currency')
 def get_currency_quote():
     currency_rate = CurrencyRate()
     from_currency = request.args.get('from')

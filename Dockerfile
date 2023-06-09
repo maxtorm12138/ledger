@@ -3,5 +3,5 @@ LABEL authors="maxtorm"
 WORKDIR /app
 COPY ./app.py ./requirements.txt ./gunicorn.conf.py /app/
 RUN pip install -r requirements.txt
-EXPOSE 8080
+EXPOSE 9095
 CMD ["gunicorn", "app:app", "-c", "./gunicorn.conf.py"]
