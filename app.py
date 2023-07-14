@@ -6,7 +6,6 @@ import os
 import urllib3
 from flask import Flask, request
 import akshare as ak
-import yfinance as yf
 from lxml import etree
 import re
 
